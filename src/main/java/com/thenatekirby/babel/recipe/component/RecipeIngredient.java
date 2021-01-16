@@ -1,6 +1,8 @@
 package com.thenatekirby.babel.recipe.component;
 
 import com.google.gson.JsonObject;
+import com.thenatekirby.babel.util.ItemUtil;
+import com.thenatekirby.babel.util.TagUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -61,15 +63,10 @@ public class RecipeIngredient {
         ResourceLocation id = new ResourceLocation(resultId);
 
         if (this.isTag) {
-            ITag<Item> itemTag = ItemTags.getCollection().get(id);
-            if (itemTag == null || itemTag.getAllElements().isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-
-            return new ItemStack(itemTag.getAllElements().get(0), count);
+            return TagUtil.firstItemInTag(id, count);
 
         } else {
-            return new ItemStack(ForgeRegistries.ITEMS.getValue(id), count);
+            return ItemUtil.makeItemStack(id, count);
         }
     }
 
