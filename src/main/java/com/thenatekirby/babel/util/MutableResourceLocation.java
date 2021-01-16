@@ -1,0 +1,20 @@
+package com.thenatekirby.babel.util;
+
+import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
+
+public class MutableResourceLocation {
+    @Nonnull
+    private final String root;
+
+    public MutableResourceLocation(@Nonnull String root) {
+        this.root = root;
+    }
+
+    public ResourceLocation withPath(@Nonnull String path) {
+        return new ResourceLocation(root, path);
+    }
+}
