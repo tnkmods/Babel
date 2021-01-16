@@ -1,4 +1,4 @@
-package com.thenatekirby.babel.util;
+package com.thenatekirby.babel.core;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;

@@ -1,7 +1,7 @@
 package com.thenatekirby.babel;
 
 import com.thenatekirby.babel.mod.BabelSerializers;
-import com.thenatekirby.babel.util.MutableResourceLocation;
+import com.thenatekirby.babel.core.MutableResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
