@@ -9,6 +9,7 @@
     "ItemLootEntryMixin",
     "LootPoolMixin",
     "LootTableMixin",
+    "SetCountMixin",
     "SetNBTMixin",
     "StandaloneLootEntryMixin"
   ]

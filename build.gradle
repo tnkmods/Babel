@@ -132,7 +132,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "MixinConfigs": "modid.mixins.json",
+                "MixinConfigs": "babel.mixins.json",
                 "Specification-Title": "${mod_name}",
                 "Specification-Vendor": "thenatekirby",
                 "Specification-Version": "${mc_version}",

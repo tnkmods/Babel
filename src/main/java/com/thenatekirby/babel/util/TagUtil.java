@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class TagUtil {
     public static boolean doesItemTagExist(@Nonnull ResourceLocation id) {
         ITag<Item> itemTag = ItemTags.getCollection().get(id);

@@ -1,9 +1,12 @@
 package com.thenatekirby.babel.loot;
 
 import com.thenatekirby.babel.mixin.EnchantRandomlyMixin;
+import com.thenatekirby.babel.mixin.SetCountMixin;
 import com.thenatekirby.babel.mixin.SetNBTMixin;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.loot.IRandomRange;
 import net.minecraft.loot.functions.EnchantRandomly;
+import net.minecraft.loot.functions.SetCount;
 import net.minecraft.loot.functions.SetNBT;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -20,5 +23,10 @@ public class LootFunctionUtil {
     @Nonnull
     public static CompoundNBT getTag(@Nonnull SetNBT function) {
         return ((SetNBTMixin) function).getTag();
+    }
+
+    @Nonnull
+    public static IRandomRange getCountRange(@Nonnull SetCount function) {
+        return ((SetCountMixin) function).getCountRange();
     }
 }
