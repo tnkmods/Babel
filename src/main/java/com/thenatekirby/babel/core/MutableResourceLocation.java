@@ -17,4 +17,9 @@ public class MutableResourceLocation {
     public ResourceLocation withPath(@Nonnull String path) {
         return new ResourceLocation(root, path);
     }
+
+    @Nonnull
+    public String getRoot() {
+        return root;
+    }
 }
