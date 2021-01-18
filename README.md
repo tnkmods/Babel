@@ -2,6 +2,8 @@
 
 A library mod for reusable code to be used with other mods.
 
+Available on [Curseforge](https://www.curseforge.com/minecraft/mc-mods/babel)
+
 #### Features
 
 - Easy to use Recipe Building, Serialization & Deserialization
@@ -16,4 +18,10 @@ A library mod for reusable code to be used with other mods.
 
 #### Note
 
-Unless you know what you're doing, use the release versions of this mod. This mod requires Forge.
+This mod requires Forge.
+
+_Unless you know what you're doing, use the release versions of this mod._
+
+#### Modpack Makers
+
+Feel free to use this mod in any modpack
