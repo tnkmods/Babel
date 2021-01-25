@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.thenatekirby.babel.condition.IRecipeCondition;
 import com.thenatekirby.babel.mod.BabelSerializers;
-import com.thenatekirby.babel.recipe.component.RecipeIngredient;
+import com.thenatekirby.babel.core.RecipeIngredient;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.util.ResourceLocation;

@@ -1,13 +1,12 @@
-package com.thenatekirby.babel.recipe.component;
+package com.thenatekirby.babel.core;
 
 import com.google.gson.JsonObject;
 import com.thenatekirby.babel.util.ItemUtil;
 import com.thenatekirby.babel.util.TagUtil;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -34,12 +33,24 @@ public class RecipeIngredient {
         return new RecipeIngredient(true, resultId, count);
     }
 
+    public static RecipeIngredient fromTag(@Nonnull ResourceLocation resultId) {
+        return new RecipeIngredient(true, resultId.toString(), 1);
+    }
+
     public static RecipeIngredient fromItem(@Nonnull String resultId) {
         return new RecipeIngredient(false, resultId, 1);
     }
 
     public static RecipeIngredient fromItem(@Nonnull String resultId, int count) {
         return new RecipeIngredient(false, resultId, count);
+    }
+
+    public static RecipeIngredient fromItem(@Nonnull ResourceLocation resultId) {
+        return new RecipeIngredient(false, resultId.toString(), 1);
+    }
+
+    public static RecipeIngredient fromItem(@Nonnull IItemProvider item) {
+        return new RecipeIngredient(false, item.asItem().getRegistryName().toString(), 1);
     }
 
     @Nonnull
@@ -81,5 +92,13 @@ public class RecipeIngredient {
         String resultId = buffer.readString();
         int count = buffer.readInt();
         return new RecipeIngredient(isTag, resultId, count);
+    }
+
+    public Ingredient makeIngredient() {
+        if (this.isTag) {
+            return Ingredient.fromTag(TagUtil.getItemTag(new ResourceLocation(this.resultId)));
+        } else {
+            return Ingredient.fromItems(ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.resultId)));
+        }
     }
 }

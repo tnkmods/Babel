@@ -6,9 +6,8 @@ import com.thenatekirby.babel.condition.IRecipeCondition;
 import com.thenatekirby.babel.condition.ModLoadedCondition;
 import com.thenatekirby.babel.integration.Mods;
 import com.thenatekirby.babel.recipe.IExternalRecipe;
-import com.thenatekirby.babel.recipe.component.RecipeIngredient;
+import com.thenatekirby.babel.core.RecipeIngredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

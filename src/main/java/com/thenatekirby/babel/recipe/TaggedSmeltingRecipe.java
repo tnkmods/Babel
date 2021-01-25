@@ -2,7 +2,7 @@ package com.thenatekirby.babel.recipe;
 
 import com.google.gson.JsonObject;
 import com.thenatekirby.babel.mod.BabelSerializers;
-import com.thenatekirby.babel.recipe.component.RecipeIngredient;
+import com.thenatekirby.babel.core.RecipeIngredient;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipe;

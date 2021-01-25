@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.thenatekirby.babel.condition.IRecipeCondition;
 import com.thenatekirby.babel.condition.ModLoadedCondition;
+import com.thenatekirby.babel.core.RecipeIngredient;
+import com.thenatekirby.babel.core.RecipeOutput;
 import com.thenatekirby.babel.integration.Mods;
 import com.thenatekirby.babel.recipe.IExternalRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -16,12 +18,10 @@ import java.util.function.Consumer;
 public class ThermalInsolatingRecipeBuilder {
     private final ResourceLocation recipeId;
 
-    private String input;
+    private RecipeIngredient input;
+    private List<RecipeOutput> outputs = new ArrayList<>();
     private float waterMod = 1.0f;
     private float energyMod = 1.0f;
-    private String output;
-    private float chance = 1.0f;
-
     private List<JsonObject> conditions = new ArrayList<>();
 
     private ThermalInsolatingRecipeBuilder(@Nonnull ResourceLocation recipeId) {
@@ -33,13 +33,13 @@ public class ThermalInsolatingRecipeBuilder {
         return new ThermalInsolatingRecipeBuilder(recipeId);
     }
 
-    public ThermalInsolatingRecipeBuilder withInput(@Nonnull String input) {
+    public ThermalInsolatingRecipeBuilder withInput(@Nonnull RecipeIngredient input) {
         this.input = input;
         return this;
     }
 
-    public ThermalInsolatingRecipeBuilder withOutput(@Nonnull String id) {
-        this.output = id;
+    public ThermalInsolatingRecipeBuilder withOutput(@Nonnull RecipeOutput output) {
+        this.outputs.add(output);
         return this;
     }
 
@@ -58,29 +58,22 @@ public class ThermalInsolatingRecipeBuilder {
         return this;
     }
 
-    public ThermalInsolatingRecipeBuilder withChance(float chance) {
-        this.chance = chance;
-        return this;
-    }
-
     public void build(Consumer<IExternalRecipe> consumer) {
-        consumer.accept(new ThermalInsolatingRecipeBuilder.Result(this.recipeId, this.input, this.output, this.chance, this.conditions, this.waterMod, this.energyMod));
+        consumer.accept(new ThermalInsolatingRecipeBuilder.Result(this.recipeId, this.input, this.outputs, this.conditions, this.waterMod, this.energyMod));
     }
 
     public static class Result implements IExternalRecipe {
         private final ResourceLocation recipeId;
-        private final String input;
-        private final String output;
-        private final float chance;
+        private final RecipeIngredient input;
+        private final List<RecipeOutput> outputs;
         private final List<JsonObject> conditions;
         private final float waterMod;
         private final float energyMod;
 
-        Result(@Nonnull ResourceLocation recipeId, @Nonnull String input, @Nonnull String output, float chance, @Nonnull List<JsonObject> conditions, float waterMod, float energyMod) {
+        Result(@Nonnull ResourceLocation recipeId, @Nonnull RecipeIngredient input, @Nonnull List<RecipeOutput> outputs, @Nonnull List<JsonObject> conditions, float waterMod, float energyMod) {
             this.recipeId = recipeId;
             this.input = input;
-            this.output = output;
-            this.chance = chance;
+            this.outputs = outputs;
             this.conditions = conditions;
             this.waterMod = waterMod;
             this.energyMod = energyMod;
@@ -96,15 +89,15 @@ public class ThermalInsolatingRecipeBuilder {
                 json.add("conditions", conditions);
             }
 
-            JsonObject ingredientJson = new JsonObject();
-            ingredientJson.addProperty("item", this.input);
-            json.add("ingredient", ingredientJson);
+            json.add("ingredient", this.input.serializeJson());
 
             JsonArray resultsArray = new JsonArray();
-            JsonObject resultJson = new JsonObject();
-            resultJson.addProperty("item", output);
-            resultJson.addProperty("chance", chance);
-            resultsArray.add(resultJson);
+            for (RecipeOutput output : outputs) {
+                JsonObject resultJson = new JsonObject();
+                resultJson.addProperty("item", output.getResultId());
+                resultJson.addProperty("chance", output.getChance());
+                resultsArray.add(resultJson);
+            }
 
             json.add("result", resultsArray);
 

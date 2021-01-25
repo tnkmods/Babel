@@ -4,9 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.thenatekirby.babel.condition.IRecipeCondition;
+import com.thenatekirby.babel.core.RecipeIngredient;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 
@@ -32,7 +33,8 @@ public class ShapedRecipeBuilder  {
     private String result;
     private int count;
     private final List<String> pattern = Lists.newArrayList();
-    private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
+    private final Map<Character, RecipeIngredient> key = Maps.newLinkedHashMap();
+    private final List<IRecipeCondition> conditions = Lists.newArrayList();
 
     private ShapedRecipeBuilder(@Nonnull ResourceLocation recipeId) {
         this.recipeId = recipeId;
@@ -50,13 +52,8 @@ public class ShapedRecipeBuilder  {
         return this;
     }
 
-    public ShapedRecipeBuilder withKey(Character key, Ingredient ingredient) {
+    public ShapedRecipeBuilder withKey(Character key, RecipeIngredient ingredient) {
         this.key.put(key, ingredient);
-        return this;
-    }
-
-    public ShapedRecipeBuilder withKey(Character key, IItemProvider itemProvider) {
-        this.key.put(key, Ingredient.fromItems(itemProvider));
         return this;
     }
 
@@ -78,12 +75,17 @@ public class ShapedRecipeBuilder  {
         return withResult(Objects.requireNonNull(itemProvider.asItem().getRegistryName()).toString(), count);
     }
 
+    public ShapedRecipeBuilder withCondition(IRecipeCondition condition) {
+        this.conditions.add(condition);
+        return this;
+    }
+
     // endregion
     // ====---------------------------------------------------------------------------====
     // region Builder
 
     public void build(Consumer<IFinishedRecipe> consumerIn) {
-        consumerIn.accept(new Result(recipeId, pattern, key, result, count));
+        consumerIn.accept(new Result(recipeId, pattern, key, result, conditions, count));
     }
 
     // endregion
@@ -93,15 +95,17 @@ public class ShapedRecipeBuilder  {
     public static class Result implements IFinishedRecipe {
         private final ResourceLocation recipeId;
         private final List<String> pattern;
-        private final Map<Character, Ingredient> key;
+        private final Map<Character, RecipeIngredient> key;
         private final String result;
+        private final List<IRecipeCondition> conditions;
         private final int count;
 
-        public Result(ResourceLocation recipeId, List<String> pattern, Map<Character, Ingredient> key, String result, int count) {
+        public Result(ResourceLocation recipeId, List<String> pattern, Map<Character, RecipeIngredient> key, String result, List<IRecipeCondition> conditions, int count) {
             this.recipeId = recipeId;
             this.pattern = pattern;
             this.key = key;
             this.result = result;
+            this.conditions = conditions;
             this.count = count;
         }
 
@@ -115,8 +119,8 @@ public class ShapedRecipeBuilder  {
 
             JsonObject keyJson = new JsonObject();
 
-            for(Map.Entry<Character, Ingredient> entry : this.key.entrySet()) {
-                keyJson.add(String.valueOf(entry.getKey()), entry.getValue().serialize());
+            for(Map.Entry<Character, RecipeIngredient> entry : this.key.entrySet()) {
+                keyJson.add(String.valueOf(entry.getKey()), entry.getValue().serializeJson());
             }
 
             json.add("key", keyJson);
@@ -128,6 +132,15 @@ public class ShapedRecipeBuilder  {
                 resultJson.addProperty("count", this.count);
             }
 
+            if (!this.conditions.isEmpty()) {
+                JsonArray conditions = new JsonArray();
+                for (IRecipeCondition condition : this.conditions) {
+                    conditions.add(condition.serializeJson());
+                }
+
+                json.add("conditions", conditions);
+            }
+            
             json.add("result", resultJson);
         }
 

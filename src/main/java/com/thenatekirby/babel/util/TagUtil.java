@@ -9,6 +9,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class TagUtil {
@@ -20,6 +21,11 @@ public class TagUtil {
     public static boolean doesBlockTagExist(@Nonnull ResourceLocation id) {
         ITag<Block> blockTag = BlockTags.getCollection().get(id);
         return (blockTag != null);
+    }
+
+    @Nullable
+    public static ITag<Item> getItemTag(@Nonnull ResourceLocation id) {
+        return ItemTags.getCollection().get(id);
     }
 
     public static ItemStack firstItemInTag(@Nonnull ResourceLocation id) {
