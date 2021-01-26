@@ -25,7 +25,6 @@ public class DeferredItem<T extends Item> implements IItemProvider {
     // Getters
 
     @Nonnull
-    @Override
     public T asItem() {
         return item.get();
     }
