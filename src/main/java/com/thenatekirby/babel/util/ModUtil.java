@@ -1,5 +1,6 @@
 package com.thenatekirby.babel.util;
 
+import com.thenatekirby.babel.core.MutableResourceLocation;
 import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nonnull;
@@ -11,6 +12,20 @@ import java.util.function.Supplier;
 public class ModUtil {
     public static boolean isModLoaded(@Nonnull String modId) {
         return ModList.get().isLoaded(modId);
+    }
+
+    public static boolean isModLoaded(@Nonnull MutableResourceLocation mod) {
+        return isModLoaded(mod.getRoot());
+    }
+
+    public static boolean isAnyModLoaded(MutableResourceLocation... mods) {
+        for (MutableResourceLocation mod : mods) {
+            if (isModLoaded(mod.getRoot())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Nullable
