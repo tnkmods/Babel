@@ -1,10 +1,14 @@
 package com.thenatekirby.babel.util;
 
 import com.thenatekirby.babel.Babel;
+import com.thenatekirby.babel.api.IBlockReplacement;
+import com.thenatekirby.babel.mixin.StateHolderMixin;
+import com.thenatekirby.babel.mixin.StateContainerMixin;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -34,5 +38,14 @@ public class RegistrationUtil {
 
         }.setRegistryName(Objects.requireNonNull(block.getRegistryName())));
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <B extends Block & IBlockReplacement> void overrideBlockstates(@Nonnull Block oldBlock, @Nonnull B newBlock) {
+        newBlock.overrideStateContainer(oldBlock.getStateContainer());
+        newBlock.overrideDefaultState(oldBlock.getDefaultState());
+
+        ((StateContainerMixin<Block>) newBlock.getStateContainer()).setOwner(newBlock);
+        newBlock.getStateContainer().getValidStates().forEach(blockState -> ((StateHolderMixin) blockState).setInstance(newBlock));
     }
 }

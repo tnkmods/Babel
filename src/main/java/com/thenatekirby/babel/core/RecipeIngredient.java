@@ -1,7 +1,7 @@
 package com.thenatekirby.babel.core;
 
 import com.google.gson.JsonObject;
-import com.thenatekirby.babel.util.ItemUtil;
+import com.thenatekirby.babel.util.ItemStackUtil;
 import com.thenatekirby.babel.util.TagUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -77,7 +77,7 @@ public class RecipeIngredient {
             return TagUtil.firstItemInTag(id, count);
 
         } else {
-            return ItemUtil.makeItemStack(id, count);
+            return ItemStackUtil.makeItemStack(id, count);
         }
     }
 
