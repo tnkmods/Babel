@@ -2,6 +2,7 @@ package com.thenatekirby.babel.core.slots;
 
 import com.thenatekirby.babel.util.ItemStackUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -20,6 +21,8 @@ public class ItemSlot implements IItemHandler {
 
     private final int posX;
     private final int posY;
+
+    private IOnSlotChangedListener listener;
 
     public ItemSlot(int posX, int posY) {
         this(posX, posY, ItemStackValidators.ALL);
@@ -40,6 +43,10 @@ public class ItemSlot implements IItemHandler {
 
     public int getPosY() {
         return posY;
+    }
+
+    public void setListener(IOnSlotChangedListener listener) {
+        this.listener = listener;
     }
 
     // endregion
@@ -67,6 +74,7 @@ public class ItemSlot implements IItemHandler {
         if (itemStack.isEmpty()) {
             if (!simulate) {
                 setItemStack(insertStack);
+                onSlotChanged();
             }
 
             return ItemStack.EMPTY;
@@ -78,6 +86,7 @@ public class ItemSlot implements IItemHandler {
             if (count <= maxCapacity) {
                 if (!simulate) {
                     itemStack.setCount(count);
+                    onSlotChanged();
                 }
 
                 return ItemStack.EMPTY;
@@ -85,6 +94,7 @@ public class ItemSlot implements IItemHandler {
 
             if (!simulate) {
                 itemStack.setCount(maxCapacity);
+                onSlotChanged();
             }
 
             return ItemStackUtil.itemStackWithSize(insertStack, count - maxCapacity);
@@ -107,6 +117,8 @@ public class ItemSlot implements IItemHandler {
             if (itemStack.isEmpty()) {
                 setItemStack(ItemStack.EMPTY);
             }
+
+            onSlotChanged();
         }
 
         return extractedStack;
@@ -127,7 +139,11 @@ public class ItemSlot implements IItemHandler {
     // region Extensions
 
     public void setItemStack(@Nonnull ItemStack itemStack) {
-        this.itemStack = itemStack;
+        if (this.itemStack.getItem() != itemStack.getItem() || this.itemStack.getCount() != itemStack.getCount()) {
+            this.itemStack = itemStack;
+
+            onSlotChanged();
+        }
     }
 
     @Nonnull
@@ -139,7 +155,31 @@ public class ItemSlot implements IItemHandler {
         this.enabled = enabled;
     }
 
-    public void onSlotChanged() {
+    private void onSlotChanged() {
+        if (this.listener != null) {
+            this.listener.onSlotChanged(this);
+        }
+    }
 
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region NBT
+
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        itemStack.write(nbt);
+        return nbt;
+    }
+
+    public void deserializeNBT(@Nonnull CompoundNBT nbt) {
+        this.itemStack = ItemStack.read(nbt);
+    }
+
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region Listener
+
+    public interface IOnSlotChangedListener {
+        void onSlotChanged(ItemSlot slot);
     }
 }

@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -51,6 +52,15 @@ public class BabelTileEntity extends TileEntity {
         return inventory;
     }
 
+    public void markInventoryDirty() {
+        if (world != null && !world.isRemote) {
+            onInventoryChanged((ServerWorld) world);
+        }
+    }
+
+    public void onInventoryChanged(@Nonnull ServerWorld world) {
+    }
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
@@ -84,6 +94,8 @@ public class BabelTileEntity extends TileEntity {
         return super.getCapability(cap, side);
     }
 
+    // ====---------------------------------------------------------------------------====
+    // region NBT
 
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
@@ -97,11 +109,12 @@ public class BabelTileEntity extends TileEntity {
     @Override
     @Nonnull
     public CompoundNBT write(@Nonnull CompoundNBT compound) {
-
         if (inventory != null) {
             compound.put("inv", inventory.serializeNBT());
         }
 
         return super.write(compound);
     }
+
+    // endregion
 }

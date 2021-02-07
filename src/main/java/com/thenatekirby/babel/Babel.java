@@ -1,5 +1,6 @@
 package com.thenatekirby.babel;
 
+import com.thenatekirby.babel.core.capability.CapabilityExperience;
 import com.thenatekirby.babel.mod.BabelPackets;
 import com.thenatekirby.babel.mod.BabelSerializers;
 import com.thenatekirby.babel.core.MutableResourceLocation;
@@ -42,6 +43,8 @@ public class Babel {
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event) {
+        CapabilityExperience.register();
+
         BabelPackets.registerMessages();
     }
 }

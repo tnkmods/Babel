@@ -10,13 +10,9 @@ import java.util.List;
 
 public class BabelItemHandler implements IItemHandler {
     @Nonnull
-    private final ContainerInventory inventory;
-
-    @Nonnull
     private final List<ItemSlot> allSlots;
 
-    public BabelItemHandler(@Nonnull ContainerInventory inventory, @Nonnull List<ItemSlot> allSlots) {
-        this.inventory = inventory;
+    public BabelItemHandler(@Nonnull List<ItemSlot> allSlots) {
         this.allSlots = allSlots;
     }
 

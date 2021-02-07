@@ -5,11 +5,14 @@ import com.thenatekirby.babel.core.container.BabelContainer;
 import com.thenatekirby.babel.core.slots.BabelSlot;
 import com.thenatekirby.babel.gui.SlotGuiWidget;
 import com.thenatekirby.babel.mod.BabelTextureLocations;
+import com.thenatekirby.babel.util.InventoryUtil;
 import com.thenatekirby.babel.util.RenderUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -77,8 +80,16 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         matrixStack.push();
+
         renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
+        renderHoveredTooltip(matrixStack, mouseX, mouseY);
+
+        ItemStack mouseHeldItemStack = InventoryUtil.getPlayerMouseHeldItemStack();
+        if (mouseHeldItemStack.isEmpty()) {
+
+        }
+
         matrixStack.pop();
     }
 
@@ -98,7 +109,7 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(@Nonnull MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void drawGuiContainerBackgroundLayer(@Nonnull MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderUtil.resetColor();
 
         ResourceLocation resourceLocation = getBackgroundResourceLocation();

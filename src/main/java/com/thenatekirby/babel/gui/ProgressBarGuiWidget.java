@@ -9,25 +9,20 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class VerticalBarGuiWidget extends GuiWidget {
+public class ProgressBarGuiWidget extends GuiWidget {
     public enum BarType {
-        EXPERIENCE(7, 62, 0, 18, 16, 0),
-        POWER(7, 62, 0, 18, 8, 0);
+        DEFAULT(32, 32, 0, 80);
 
         public int width;
         public int height;
         public int textureX;
         public int textureY;
-        public int fillOffsetX;
-        public int fillOffsetY;
 
-        BarType(int width, int height, int textureX, int textureY, int fillOffsetX, int fillOffsetY) {
+        BarType(int width, int height, int textureX, int textureY) {
             this.width = width;
             this.height = height;
             this.textureX = textureX;
             this.textureY = textureY;
-            this.fillOffsetX = fillOffsetX;
-            this.fillOffsetY = fillOffsetY;
         }
     }
 
@@ -39,8 +34,8 @@ public class VerticalBarGuiWidget extends GuiWidget {
     private GuiRenderer renderer;
     private IProgress progressProvider;
 
-    public VerticalBarGuiWidget(BarType barType, ResourceLocation defaultLocation, IProgress progressProvider, GuiRenderer renderer, int x, int y) {
-        super(renderer.getGuiLeft() + x - 1, renderer.getGuiTop() + y - 1, 8, barType.height, NO_MESSAGE_COMPONENT);
+    public ProgressBarGuiWidget(BarType barType, ResourceLocation defaultLocation, IProgress progressProvider, GuiRenderer renderer, int x, int y) {
+        super(renderer.getGuiLeft() + x - 1, renderer.getGuiTop() + y - 1, barType.width, barType.height, NO_MESSAGE_COMPONENT);
         this.defaultLocation = defaultLocation;
         this.renderer = renderer;
         this.progressProvider = progressProvider;
@@ -53,15 +48,7 @@ public class VerticalBarGuiWidget extends GuiWidget {
     private void setBarType(BarType barType) {
         this.barType = barType;
         this.textureX = barType.textureX;
-        this.textureY = barType.textureY;
-    }
-
-    public IProgress getProgressProvider() {
-        return progressProvider;
-    }
-
-    public GuiRenderer getRenderer() {
-        return renderer;
+        this.textureY = 80; //barType.textureY;
     }
 
     // ====---------------------------------------------------------------------------====
@@ -71,16 +58,11 @@ public class VerticalBarGuiWidget extends GuiWidget {
     public void renderButton(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         RenderUtil.bindTexture(GUI);
 
-        if (progressProvider != null) {
-            int progressHeight = (int) (progressProvider.getProgress() * barType.height);
-            int offset = barType.height - progressHeight;
+        int progressWidth = (int)(progressProvider.getProgress() * barType.width);
 
-            renderer.drawTexturedRect(matrixStack, x, y, textureX, textureY, width, height);
-            renderer.drawTexturedRect(matrixStack, x, y + offset, barType.fillOffsetX, textureY + (barType.height - progressHeight), width, progressHeight);
-
-        }
+        renderer.drawTexturedRect(matrixStack, x, y, textureX, textureY, width, height);
+        renderer.drawTexturedRect(matrixStack, x, y, textureX + barType.width, textureY, progressWidth, barType.height);
 
         RenderUtil.bindTexture(defaultLocation);
     }
-
 }

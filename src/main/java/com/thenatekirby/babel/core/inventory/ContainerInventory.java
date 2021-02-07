@@ -2,9 +2,7 @@ package com.thenatekirby.babel.core.inventory;
 
 import com.thenatekirby.babel.core.energy.BabelEnergyStorage;
 import com.thenatekirby.babel.core.energy.EnergyBuffer;
-import com.thenatekirby.babel.core.inventory.InventoryItemHandler;
 import com.thenatekirby.babel.core.slots.ItemSlot;
-import com.thenatekirby.babel.core.inventory.SlotConfiguration;
 import com.thenatekirby.babel.core.tileentity.BabelTileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ContainerInventory<T extends BabelTileEntity> implements INBTSerializable<CompoundNBT>, BabelEnergyStorage.IEnergyStorageChangedObserver {
+public abstract class ContainerInventory<T extends BabelTileEntity> implements INBTSerializable<CompoundNBT>, BabelEnergyStorage.IEnergyStorageChangedObserver, ItemSlot.IOnSlotChangedListener {
     private final T tileEntity;
 
     private BabelEnergyStorage energyStorage = new BabelEnergyStorage(EnergyBuffer.ZERO);
@@ -61,17 +59,30 @@ public abstract class ContainerInventory<T extends BabelTileEntity> implements I
 
     private void setupHandlers() {
         SlotConfiguration configuration = makeConfiguration();
+        setupHandlers(configuration);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void setupHandlers(@Nonnull SlotConfiguration configuration) {
+        List<ItemSlot> inputSlots = configuration.getInputItemSlots();
+        List<ItemSlot> outputSlots = configuration.getOutputItemSlots();
+        List<ItemSlot> auxSlots = configuration.getAuxilaryItemSlots();
+
+        List<ItemSlot> allSlots = new ArrayList<>();
+        allSlots.addAll(inputSlots);
+        allSlots.addAll(outputSlots);
+        allSlots.addAll(auxSlots);
 
         this.energyStorage = new BabelEnergyStorage(configuration.getEnergyBuffer());
-        this.inputItemHandler = new InventoryItemHandler(this, configuration.getInputItemSlots(), Collections.emptyList(), Collections.emptyList());
-        this.outputItemHandler = new InventoryItemHandler(this, Collections.emptyList(), configuration.getOutputItemSlots(), Collections.emptyList());
-        this.allItemHandler = new InventoryItemHandler(this, configuration.getInputItemSlots(), configuration.getOutputItemSlots(), configuration.getAuxilaryItemSlots());
 
-        List<ItemSlot> itemSlots = new ArrayList<>();
-        itemSlots.addAll(configuration.getInputItemSlots());
-        itemSlots.addAll(configuration.getOutputItemSlots());
-        itemSlots.addAll(configuration.getAuxilaryItemSlots());
-        this.manualItemHandler = new BabelItemHandler(this, itemSlots);
+        this.inputItemHandler = new InventoryItemHandler(this, inputSlots, Collections.emptyList(), Collections.emptyList());
+        this.outputItemHandler = new InventoryItemHandler(this, Collections.emptyList(), outputSlots, Collections.emptyList());
+        this.allItemHandler = new InventoryItemHandler(this, inputSlots, outputSlots, auxSlots);
+        this.manualItemHandler = new BabelItemHandler(allSlots);
+
+        for (ItemSlot slot : allSlots) {
+            slot.setListener(this);
+        }
     }
 
     // endregion
@@ -105,6 +116,10 @@ public abstract class ContainerInventory<T extends BabelTileEntity> implements I
             nbt.put("energy", energyStorage.serializeNBT());
         }
 
+        if (allItemHandler != null) {
+            nbt.put("items", allItemHandler.serializeNBT());
+        }
+
         return nbt;
     }
 
@@ -112,6 +127,10 @@ public abstract class ContainerInventory<T extends BabelTileEntity> implements I
     public void deserializeNBT(CompoundNBT nbt) {
         if (energyStorage != null) {
             energyStorage.deserializeNBT(nbt.getCompound("energy"));
+        }
+
+        if (allItemHandler != null) {
+            allItemHandler.deserializeNBT(nbt.getCompound("items"));
         }
     }
 
@@ -125,6 +144,13 @@ public abstract class ContainerInventory<T extends BabelTileEntity> implements I
     }
 
     // endregion
+    // ====---------------------------------------------------------------------------====
+    // region IOnSlotChangedListener
 
 
+    @Override
+    public void onSlotChanged(ItemSlot slot) {
+        this.tileEntity.markDirty();
+        this.tileEntity.markInventoryDirty();
+    }
 }

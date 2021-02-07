@@ -45,6 +45,8 @@ public class BabelContainer extends Container {
     private List<ISyncable> syncables;
     private PlayerEntity playerEntity;
 
+    private SyncableProgress powerProgress;
+
     protected BabelContainer(@Nonnull ContainerConfig containerConfig, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
         super(containerConfig.getContainerType(), windowId);
 
@@ -82,21 +84,15 @@ public class BabelContainer extends Container {
     protected List<ISyncable> getSyncables() {
         List<ISyncable> syncables = new ArrayList<>();
         if (containerInventory != null && containerInventory.getEnergyStorage().getCapacity() > 0) {
-            syncables.add(SyncableProgress.from(containerInventory.getEnergyStorage()));
+            powerProgress = SyncableProgress.from(containerInventory.getEnergyStorage());
+            syncables.add(powerProgress);
         }
 
         return syncables;
     }
 
-    @Nullable
-    public IProgress getProgress() {
-        for (ISyncable syncable : syncables) {
-            if (syncable instanceof IProgress) {
-                return (IProgress) syncable;
-            }
-        }
-
-        return null;
+    public SyncableProgress getPowerProgress() {
+        return powerProgress;
     }
 
     // endregion
