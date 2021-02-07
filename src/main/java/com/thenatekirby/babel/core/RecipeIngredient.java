@@ -53,6 +53,10 @@ public class RecipeIngredient {
         return new RecipeIngredient(false, item.asItem().getRegistryName().toString(), 1);
     }
 
+    public static RecipeIngredient fromItem(@Nonnull IItemProvider item, int count) {
+        return new RecipeIngredient(false, item.asItem().getRegistryName().toString(), count);
+    }
+
     @Nonnull
     public JsonObject serializeJson() {
         JsonObject jsonObject = new JsonObject();

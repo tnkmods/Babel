@@ -3,8 +3,6 @@ package com.thenatekirby.babel.api;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface IPacketHandler<T> {

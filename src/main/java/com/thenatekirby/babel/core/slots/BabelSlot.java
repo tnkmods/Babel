@@ -28,10 +28,6 @@ public class BabelSlot extends Slot {
     @Nonnull
     private ItemStack insertItem(@Nonnull ItemStack stack, boolean simulate) {
         ItemStack results = inventory.insertItem(0, stack, simulate);
-        if (!simulate && stack.getCount() != results.getCount()) {
-            onSlotChanged();
-        }
-
         return results;
     }
 
@@ -49,13 +45,6 @@ public class BabelSlot extends Slot {
     @Override
     public void putStack(@Nonnull ItemStack itemStack) {
         inventory.setItemStack(itemStack);
-        onSlotChanged();
-    }
-
-    @Override
-    public void onSlotChange(ItemStack current, ItemStack next) {
-        super.onSlotChange(current, next);
-        inventory.onSlotChanged();
     }
 
     @Override

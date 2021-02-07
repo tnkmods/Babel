@@ -7,38 +7,39 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SlotConfiguration {
+@SuppressWarnings("unchecked")
+public class SlotConfiguration<T extends SlotConfiguration> {
     private List<ItemSlot> inputItemSlots = new ArrayList<>();
     private List<ItemSlot> outputItemSlots = new ArrayList<>();
     private List<ItemSlot> auxilaryItemSlots = new ArrayList<>();
     private EnergyBuffer energyBuffer = EnergyBuffer.ZERO;
 
-    private SlotConfiguration() {
+    protected SlotConfiguration() {
 
     }
 
-    public static SlotConfiguration make() {
+    public static <T extends SlotConfiguration> SlotConfiguration<T> make() {
         return new SlotConfiguration();
     }
 
-    public SlotConfiguration withInputs(ItemSlot... itemSlots) {
+    public T withInputs(ItemSlot... itemSlots) {
         inputItemSlots.addAll(Arrays.asList(itemSlots));
-        return this;
+        return (T) this;
     }
 
-    public SlotConfiguration withOutputs(ItemSlot... itemSlots) {
+    public T withOutputs(ItemSlot... itemSlots) {
         outputItemSlots.addAll(Arrays.asList(itemSlots));
-        return this;
+        return (T) this;
     }
 
-    public SlotConfiguration withEnergyBuffer(EnergyBuffer buffer) {
+    public T withEnergyBuffer(EnergyBuffer buffer) {
         this.energyBuffer = buffer;
-        return this;
+        return (T) this;
     }
 
-    public SlotConfiguration withAuxiliaries(ItemSlot... itemSlots) {
+    public T withAuxiliaries(ItemSlot... itemSlots) {
         auxilaryItemSlots.addAll(Arrays.asList(itemSlots));
-        return this;
+        return (T) this;
     }
 
     public List<ItemSlot> getInputItemSlots() {

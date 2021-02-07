@@ -3,6 +3,9 @@ package com.thenatekirby.babel.core.inventory;
 import com.thenatekirby.babel.core.slots.ItemSlot;
 import com.thenatekirby.babel.util.ItemStackUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -111,4 +114,29 @@ public class InventoryItemHandler implements IItemHandler {
     public List<ItemSlot> getAllSlots() {
         return allSlots;
     }
+
+    // ====---------------------------------------------------------------------------====
+    // region NBT
+
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        ListNBT listNBT = new ListNBT();
+
+        for (ItemSlot slot : allSlots) {
+            listNBT.add(slot.serializeNBT());
+        }
+
+        nbt.put("slots", listNBT);
+        return nbt;
+    }
+
+    public void deserializeNBT(@Nonnull CompoundNBT nbt) {
+        ListNBT listNBT = nbt.getList("slots", Constants.NBT.TAG_COMPOUND);
+        for (int idx = 0; idx < listNBT.size(); idx++) {
+            CompoundNBT slotNBT = listNBT.getCompound(idx);
+            allSlots.get(idx).deserializeNBT(slotNBT);
+        }
+    }
+
+    // endregion
 }

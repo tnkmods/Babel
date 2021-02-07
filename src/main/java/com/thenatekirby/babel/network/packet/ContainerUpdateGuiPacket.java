@@ -3,9 +3,8 @@ package com.thenatekirby.babel.network.packet;
 import com.thenatekirby.babel.api.IPacketHandler;
 import com.thenatekirby.babel.core.container.BabelContainer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -42,7 +41,8 @@ public class ContainerUpdateGuiPacket extends BabelPacket {
         public void handle(ContainerUpdateGuiPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
             NetworkEvent.Context context = contextSupplier.get();
             context.enqueueWork(() -> {
-                PlayerEntity playerEntity = Minecraft.getInstance().player;
+
+                ClientPlayerEntity playerEntity = Minecraft.getInstance().player;
 
                 if (playerEntity != null && playerEntity.openContainer instanceof BabelContainer && playerEntity.openContainer.windowId == packet.windowId) {
                     ((BabelContainer) playerEntity.openContainer).receive(packet);
