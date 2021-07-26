@@ -41,7 +41,7 @@ public class NetworkManager {
     }
 
     public <T> void sendToPlayer(ServerPlayerEntity entity, T packet) {
-        getChannel().sendTo(packet, entity.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+        getChannel().sendTo(packet, entity.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     public <T> void sendToServer(T packet) {

@@ -139,7 +139,7 @@ public class ShapedRecipeBuilder  {
             this.count = count;
         }
 
-        public void serialize(@Nonnull JsonObject json) {
+        public void serializeRecipeData(@Nonnull JsonObject json) {
             JsonArray patternJson = new JsonArray();
 
             for (String line: this.pattern) {
@@ -175,23 +175,23 @@ public class ShapedRecipeBuilder  {
         }
 
         @Nonnull
-        public IRecipeSerializer<?> getSerializer() {
-            return IRecipeSerializer.CRAFTING_SHAPED;
+        public IRecipeSerializer<?> getType() {
+            return IRecipeSerializer.SHAPED_RECIPE;
         }
 
         @Nonnull
-        public ResourceLocation getID() {
+        public ResourceLocation getId() {
             return this.recipeId;
         }
 
 
         @Nullable
-        public JsonObject getAdvancementJson() {
+        public JsonObject serializeAdvancement() {
             return null;
         }
 
         @Nullable
-        public ResourceLocation getAdvancementID() {
+        public ResourceLocation getAdvancementId() {
             return null;
         }
     }

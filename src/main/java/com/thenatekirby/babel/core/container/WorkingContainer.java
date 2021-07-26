@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import com.thenatekirby.babel.core.container.BabelContainer.ContainerConfig;
+
 public class WorkingContainer extends BabelContainer {
     private SyncableProgress progress;
     private SyncableRedstoneMode redstoneMode;

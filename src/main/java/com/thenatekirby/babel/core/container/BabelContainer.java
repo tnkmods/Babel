@@ -57,7 +57,7 @@ public class BabelContainer extends Container {
         this.playerEntity = player;
         this.blockPos = pos;
 
-        TileEntity tileEntity = world.getTileEntity(pos);
+        TileEntity tileEntity = world.getBlockEntity(pos);
 
         if (tileEntity instanceof BabelTileEntity) {
             this.tileEntity = (BabelTileEntity) tileEntity;
@@ -102,7 +102,7 @@ public class BabelContainer extends Container {
     // region Interaction
 
     @Override
-    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
+    public boolean stillValid(@Nonnull PlayerEntity playerIn) {
         return true;
     }
 
@@ -111,8 +111,8 @@ public class BabelContainer extends Container {
     // region Networking
 
     @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
+    public void broadcastChanges() {
+        super.broadcastChanges();
 
         ServerUtil.ifServer(tileEntity, world -> {
             PacketBuffer packetBuffer = new PacketBuffer(Unpooled.buffer());
@@ -121,7 +121,7 @@ public class BabelContainer extends Container {
                 syncable.write(packetBuffer);
             }
 
-            ContainerUpdateGuiPacket packet = new ContainerUpdateGuiPacket(windowId, packetBuffer);
+            ContainerUpdateGuiPacket packet = new ContainerUpdateGuiPacket(containerId, packetBuffer);
             List<IContainerListener> listeners = getContainerListeners();
             for (IContainerListener listener : listeners) {
                 if (listener instanceof ServerPlayerEntity) {
@@ -220,55 +220,55 @@ public class BabelContainer extends Container {
 
     @Nonnull
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack outputItemStack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = this.slots.get(index);
         ContainerInventory containerInventory = getContainerInventory();
 
         if (containerInventory == null) {
             return ItemStack.EMPTY;
         }
 
-        if (slot != null && slot.getHasStack()) {
-            ItemStack inputItemStack = slot.getStack();
+        if (slot != null && slot.hasItem()) {
+            ItemStack inputItemStack = slot.getItem();
             outputItemStack = inputItemStack.copy();
 
             int machineSlotCount = containerInventory.getSlotCount();
             int inventorySlotEnd = machineSlotCount + BabelConstants.PLAYER_INV_SLOT_COUNT;
 
             if (index < machineSlotCount) {
-                if (!this.mergeItemStack(inputItemStack, machineSlotCount, inventorySlotEnd, true)) {
+                if (!this.moveItemStackTo(inputItemStack, machineSlotCount, inventorySlotEnd, true)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onSlotChange(inputItemStack, inputItemStack);
+                slot.onQuickCraft(inputItemStack, inputItemStack);
 
             } else {
                 if (containerInventory.canInsert(inputItemStack)) {
-                    if (!this.mergeItemStack(inputItemStack, 0, machineSlotCount, false)) {
+                    if (!this.moveItemStackTo(inputItemStack, 0, machineSlotCount, false)) {
                         return ItemStack.EMPTY;
                     }
 
                 } else if (index < machineSlotCount + 27) {
                     // Player Inventory (non-hotbar) to hotbar
 
-                    if (!this.mergeItemStack(inputItemStack, machineSlotCount + 27, inventorySlotEnd, false)) {
+                    if (!this.moveItemStackTo(inputItemStack, machineSlotCount + 27, inventorySlotEnd, false)) {
                         return ItemStack.EMPTY;
                     }
 
                 } else if (index < inventorySlotEnd) {
                     // Player hotbar to inventory
 
-                    if (!this.mergeItemStack(inputItemStack, machineSlotCount, machineSlotCount + 27, false)) {
+                    if (!this.moveItemStackTo(inputItemStack, machineSlotCount, machineSlotCount + 27, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
             }
 
             if (inputItemStack.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (inputItemStack.getCount() == outputItemStack.getCount()) {

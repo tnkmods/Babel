@@ -96,7 +96,7 @@ public class TaggedSmeltingRecipeBuilder {
             this.conditions = conditions;
         }
 
-        public void serialize(@Nonnull JsonObject json) {
+        public void serializeRecipeData(@Nonnull JsonObject json) {
             if (!conditions.isEmpty()) {
                 JsonArray conditions = new JsonArray();
                 for (JsonObject condition : this.conditions) {
@@ -113,22 +113,22 @@ public class TaggedSmeltingRecipeBuilder {
         }
 
         @Nonnull
-        public IRecipeSerializer<?> getSerializer() {
+        public IRecipeSerializer<?> getType() {
             return BabelSerializers.TAGGED_SMELTING.getAsRecipeSerializer();
         }
 
         @Nonnull
-        public ResourceLocation getID() {
+        public ResourceLocation getId() {
             return this.id;
         }
 
         @Nullable
-        public JsonObject getAdvancementJson() {
+        public JsonObject serializeAdvancement() {
             return null;
         }
 
         @Nullable
-        public ResourceLocation getAdvancementID() {
+        public ResourceLocation getAdvancementId() {
             return null;
         }
     }

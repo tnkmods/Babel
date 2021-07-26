@@ -30,7 +30,7 @@ public class RegistrationUtil {
         }
 
         ForgeRegistries.BLOCKS.register(block);
-        ForgeRegistries.ITEMS.register(new BlockItem(block, new Item.Properties().group(Objects.requireNonNull(existing.asItem().getGroup()))) {
+        ForgeRegistries.ITEMS.register(new BlockItem(block, new Item.Properties().tab(Objects.requireNonNull(existing.asItem().getItemCategory()))) {
             @Override
             public String getCreatorModId(ItemStack itemStack) {
                 return modId;
@@ -42,10 +42,10 @@ public class RegistrationUtil {
 
     @SuppressWarnings("unchecked")
     public static <B extends Block & IBlockReplacement> void overrideBlockstates(@Nonnull Block oldBlock, @Nonnull B newBlock) {
-        newBlock.overrideStateContainer(oldBlock.getStateContainer());
-        newBlock.overrideDefaultState(oldBlock.getDefaultState());
+        newBlock.overrideStateContainer(oldBlock.getStateDefinition());
+        newBlock.overrideDefaultState(oldBlock.defaultBlockState());
 
-        ((StateContainerMixin<Block>) newBlock.getStateContainer()).setOwner(newBlock);
-        newBlock.getStateContainer().getValidStates().forEach(blockState -> ((StateHolderMixin) blockState).setInstance(newBlock));
+        ((StateContainerMixin<Block>) newBlock.getStateDefinition()).setOwner(newBlock);
+        newBlock.getStateDefinition().getPossibleStates().forEach(blockState -> ((StateHolderMixin) blockState).setInstance(newBlock));
     }
 }

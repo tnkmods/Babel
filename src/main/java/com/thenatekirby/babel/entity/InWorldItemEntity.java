@@ -26,11 +26,11 @@ public class InWorldItemEntity extends ItemEntity {
     public InWorldItemEntity(EntityType<? extends ItemEntity> entityType, final World world, final double x,
                                final double y, final double z, final ItemStack stack) {
         this(entityType, world);
-        this.setPosition(x, y, z);
+        this.setPos(x, y, z);
         this.setItem(stack);
 
-        this.rotationYaw = this.rand.nextFloat() * 360.0F;
-        this.setMotion(this.rand.nextDouble() * 0.2D - 0.1D, 0.2D, this.rand.nextDouble() * 0.2D - 0.1D);
+        this.yRot = this.random.nextFloat() * 360.0F;
+        this.setDeltaMovement(this.random.nextDouble() * 0.2D - 0.1D, 0.2D, this.random.nextDouble() * 0.2D - 0.1D);
         this.lifespan = stack.getEntityLifespan(world);
     }
 
@@ -38,7 +38,7 @@ public class InWorldItemEntity extends ItemEntity {
     public void tick() {
         super.tick();
 
-        if (world.isRemote || !ticking) {
+        if (level.isClientSide || !ticking) {
             return;
         }
 
@@ -47,7 +47,7 @@ public class InWorldItemEntity extends ItemEntity {
                 onWaterTick();
             } else if (this.isInLava()) {
                 onLavaTick();
-            } else if (world.getBlockState(getPosition()) == Blocks.FIRE.getDefaultState()) {
+            } else if (level.getBlockState(blockPosition()) == Blocks.FIRE.defaultBlockState()) {
                 onFireTick();
             } else if (this.isOnGround()) {
                 onGroundTick();
@@ -77,7 +77,7 @@ public class InWorldItemEntity extends ItemEntity {
 
     @Nonnull
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

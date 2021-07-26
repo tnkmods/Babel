@@ -40,7 +40,7 @@ public class DeferredContainer<T extends Container> {
 
             return ((windowId, inv, data) -> {
                 BlockPos pos = data.readBlockPos();
-                World world = inv.player.world;
+                World world = inv.player.level;
                 return factory.create(windowId, world, pos, inv, inv.player);
             });
         }

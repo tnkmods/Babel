@@ -32,7 +32,7 @@ public class ExternalRecipeProvider implements IDataProvider {
     }
 
     @Override
-    public void act(@Nonnull DirectoryCache cache) throws IOException {
+    public void run(@Nonnull DirectoryCache cache) throws IOException {
         Path path = this.dataGenerator.getOutputFolder();
         Set<ResourceLocation> set = Sets.newHashSet();
 
@@ -52,8 +52,8 @@ public class ExternalRecipeProvider implements IDataProvider {
     private static void saveRecipe(DirectoryCache cache, JsonObject recipeJson, Path outputPath) {
         try {
             String json = GSON.toJson(recipeJson);
-            String hash = HASH_FUNCTION.hashUnencodedChars(json).toString();
-            if (!Objects.equals(cache.getPreviousHash(outputPath), hash) || !Files.exists(outputPath)) {
+            String hash = SHA1.hashUnencodedChars(json).toString();
+            if (!Objects.equals(cache.getHash(outputPath), hash) || !Files.exists(outputPath)) {
                 Files.createDirectories(outputPath.getParent());
 
                 try (BufferedWriter bufferedwriter = Files.newBufferedWriter(outputPath)) {
@@ -61,7 +61,7 @@ public class ExternalRecipeProvider implements IDataProvider {
                 }
             }
 
-            cache.recordHash(outputPath, hash);
+            cache.putNew(outputPath, hash);
 
         } catch (IOException ioexception) {
             Babel.getLogger().error("babel: Couldn't save recipe {}", recipeJson, ioexception);

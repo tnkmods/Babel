@@ -25,6 +25,6 @@ public class GuiSlotHintView extends GuiView {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         ItemStack itemStack = new ItemStack(itemProvider);
-        itemRenderer.renderItemAndEffectIntoGuiWithoutEntity(itemStack, frame.x, frame.y);
+        itemRenderer.renderAndDecorateFakeItem(itemStack, frame.x, frame.y);
     }
 }

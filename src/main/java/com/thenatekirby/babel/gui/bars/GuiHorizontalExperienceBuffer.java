@@ -14,6 +14,8 @@ import net.minecraft.util.text.StringTextComponent;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.thenatekirby.babel.gui.bars.GuiHorizontalBar.IHorizontalBarType;
+
 public class GuiHorizontalExperienceBuffer extends GuiHorizontalBar {
     private static final IHorizontalBarType BAR_TYPE = new IHorizontalBarType() {
         @Override
@@ -47,7 +49,7 @@ public class GuiHorizontalExperienceBuffer extends GuiHorizontalBar {
         drawTexturedRect(matrixStack, frame.x, frame.y + 10, 16, 148, 9, 9);
 
         ExperienceStorage experienceStorage = syncableExperience.getExperienceStorage();
-        renderer.getFontRenderer().drawStringWithShadow(matrixStack, "" + experienceStorage.getExperienceLevel() + "", (float)frame.x + 12f, (float)frame.y + 11f, 8453920);
+        renderer.getFontRenderer().drawShadow(matrixStack, "" + experienceStorage.getExperienceLevel() + "", (float)frame.x + 12f, (float)frame.y + 11f, 8453920);
     }
 
     @Override

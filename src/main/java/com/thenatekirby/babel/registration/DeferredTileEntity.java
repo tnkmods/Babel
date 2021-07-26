@@ -25,7 +25,7 @@ public class DeferredTileEntity<T extends Block, U extends TileEntity> implement
         this.name = name;
 
         this.block = blockRegister.register(name, blockSupplier);
-        this.tileEntity = tileEntityRegister.register(name, () -> TileEntityType.Builder.create(tileEntitySupplier, block.get()).build(null));
+        this.tileEntity = tileEntityRegister.register(name, () -> TileEntityType.Builder.of(tileEntitySupplier, block.get()).build(null));
         this.item = itemRegister.register(name, () -> new BlockItem(block.get(), itemProperties));
     }
 

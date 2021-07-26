@@ -32,8 +32,8 @@ public class BabelTileEntity extends TileEntity {
     }
 
     @Override
-    public void setWorldAndPos(@Nonnull World world, BlockPos pos) {
-        super.setWorldAndPos(world, pos);
+    public void setLevelAndPosition(@Nonnull World world, BlockPos pos) {
+        super.setLevelAndPosition(world, pos);
         updateCapabilities();
     }
 
@@ -53,8 +53,8 @@ public class BabelTileEntity extends TileEntity {
     }
 
     public void markInventoryDirty() {
-        if (world != null && !world.isRemote) {
-            onInventoryChanged((ServerWorld) world);
+        if (level != null && !level.isClientSide) {
+            onInventoryChanged((ServerWorld) level);
         }
     }
 
@@ -98,22 +98,22 @@ public class BabelTileEntity extends TileEntity {
     // region NBT
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundNBT nbt) {
         if (inventory != null && nbt.contains("inv", Constants.NBT.TAG_COMPOUND)) {
             inventory.deserializeNBT(nbt.getCompound("inv"));
         }
 
-        super.read(state, nbt);
+        super.load(state, nbt);
     }
 
     @Override
     @Nonnull
-    public CompoundNBT write(@Nonnull CompoundNBT compound) {
+    public CompoundNBT save(@Nonnull CompoundNBT compound) {
         if (inventory != null) {
             compound.put("inv", inventory.serializeNBT());
         }
 
-        return super.write(compound);
+        return super.save(compound);
     }
 
     // endregion

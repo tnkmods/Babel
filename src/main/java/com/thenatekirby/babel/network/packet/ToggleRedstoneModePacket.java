@@ -42,8 +42,8 @@ public class ToggleRedstoneModePacket extends BabelPacket {
             context.enqueueWork(() -> {
                 ServerPlayerEntity entity = context.getSender();
                 if (entity != null) {
-                    World world = entity.world;
-                    TileEntity tileEntity = world.getTileEntity(packet.blockPos);
+                    World world = entity.level;
+                    TileEntity tileEntity = world.getBlockEntity(packet.blockPos);
                     if (tileEntity instanceof WorkingTileEntity) {
                         ((WorkingTileEntity) tileEntity).toggleRedstoneMode(packet.forward);
                     }

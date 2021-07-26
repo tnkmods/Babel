@@ -74,11 +74,11 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
 
     @Override
     public void tick() {
-        if (world == null || world.isRemote) {
+        if (level == null || level.isClientSide) {
             return;
         }
 
-        workTick((ServerWorld) world);
+        workTick((ServerWorld) level);
     }
 
     protected void workTick(@Nonnull ServerWorld world) {
@@ -124,10 +124,10 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
     // region Lifecycle
 
     @Override
-    public void setWorldAndPos(@Nonnull World world, BlockPos pos) {
-        super.setWorldAndPos(world, pos);
+    public void setLevelAndPosition(@Nonnull World world, BlockPos pos) {
+        super.setLevelAndPosition(world, pos);
 
-        if (!world.isRemote) {
+        if (!world.isClientSide) {
             this.onInventoryChanged((ServerWorld) world);
         }
     }
@@ -192,9 +192,9 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
         }
 
         if (this.redstoneMode.whenPowered()) {
-            return world.getStrongPower(pos) > 0;
+            return world.getDirectSignalTo(worldPosition) > 0;
         } else {
-            return world.getStrongPower(pos) == 0;
+            return world.getDirectSignalTo(worldPosition) == 0;
         }
     }
 
@@ -204,9 +204,9 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
         }
 
         if (this.redstoneMode.whenPowered()) {
-            return world.getRedstonePowerFromNeighbors(pos) > 0;
+            return world.getBestNeighborSignal(worldPosition) > 0;
         } else {
-            return world.getRedstonePowerFromNeighbors(pos) == 0;
+            return world.getBestNeighborSignal(worldPosition) == 0;
         }
     }
 
@@ -308,11 +308,11 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
     }
 
     protected AxisAlignedBB getWorkingAreaAABB() {
-        return workingArea.makeAABBFromPos(pos, getWorkingAreaFacingDirection(), getWorkAreaRangeModifier());
+        return workingArea.makeAABBFromPos(worldPosition, getWorkingAreaFacingDirection(), getWorkAreaRangeModifier());
     }
 
     public VoxelShape getWorkingAreaVoxelShape() {
-        return workingArea.getVoxelShape(pos, getWorkingAreaFacingDirection(), getWorkAreaRangeModifier());
+        return workingArea.getVoxelShape(worldPosition, getWorkingAreaFacingDirection(), getWorkAreaRangeModifier());
     }
 
     public boolean isShowingWorkingArea() {
@@ -324,8 +324,8 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
     // region NBT
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
         progress.deserializeNBT(nbt.getCompound("progress"));
         redstoneMode.deserializeNBT(nbt.getCompound("redstone_mode"));
 
@@ -334,17 +334,17 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
 
             ListNBT listNBT = nbt.getList("results", Constants.NBT.TAG_COMPOUND);
             for (int idx = 0; idx < listNBT.size(); idx++) {
-                results.add(ItemStack.read(listNBT.getCompound(idx)));
+                results.add(ItemStack.of(listNBT.getCompound(idx)));
             }
         }
 
         showingWorkingArea = nbt.getBoolean("showing_working_area");
-        ServerUtil.ifServer(world, this::onCalculateResult);
+        ServerUtil.ifServer(level, this::onCalculateResult);
     }
 
     @Nonnull
     @Override
-    public CompoundNBT write(@Nonnull CompoundNBT compound) {
+    public CompoundNBT save(@Nonnull CompoundNBT compound) {
         compound.put("progress", progress.serializeNBT());
 
         if (!results.isEmpty()) {
@@ -359,7 +359,7 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
         compound.put("redstone_mode", redstoneMode.serializeNBT());
         compound.putBoolean("showing_working_area", showingWorkingArea);
 
-        return super.write(compound);
+        return super.save(compound);
     }
 
     // endregion
@@ -368,11 +368,11 @@ public class WorkingTileEntity extends BabelTileEntity implements ITickableTileE
 
     public void toggleRedstoneMode(boolean forward) {
         this.redstoneMode.toggle(forward);
-        markDirty();
+        setChanged();
     }
 
     public void toggleShowingWorkingArea() {
         this.showingWorkingArea = !this.showingWorkingArea;
-        markDirty();
+        setChanged();
     }
 }

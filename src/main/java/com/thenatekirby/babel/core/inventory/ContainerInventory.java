@@ -273,7 +273,7 @@ public abstract class ContainerInventory<T extends BabelTileEntity> implements I
 
     @Override
     public void onEnergyChanged(BabelEnergyStorage storage) {
-        this.tileEntity.markDirty();
+        this.tileEntity.setChanged();
     }
 
     // endregion
@@ -282,7 +282,7 @@ public abstract class ContainerInventory<T extends BabelTileEntity> implements I
 
     @Override
     public void onSlotChanged(ItemSlot slot) {
-        this.tileEntity.markDirty();
+        this.tileEntity.setChanged();
         this.tileEntity.markInventoryDirty();
     }
 }

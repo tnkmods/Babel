@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(StateHolder.class)
 public interface StateHolderMixin<O> {
-    @Accessor("instance")
+    @Accessor("owner")
     void setInstance(O instance);
 }

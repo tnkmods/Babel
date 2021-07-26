@@ -7,6 +7,8 @@ import com.thenatekirby.babel.gui.core.GuiTextureView;
 
 import javax.annotation.Nonnull;
 
+import com.thenatekirby.babel.gui.core.GuiTextureView.IGuiTexture;
+
 public class GuiButton extends GuiTextureView implements IClickableGuiView {
     private IOnClickListener listener;
 

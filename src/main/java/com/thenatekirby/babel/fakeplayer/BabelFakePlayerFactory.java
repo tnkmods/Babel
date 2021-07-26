@@ -28,7 +28,7 @@ public class BabelFakePlayerFactory {
 
     @Nullable
     private BabelFakePlayer getExistingFakePlayer(@Nonnull World world) {
-        return storage.get(world.getDimensionType());
+        return storage.get(world.dimensionType());
     }
 
     @Nonnull
@@ -44,13 +44,13 @@ public class BabelFakePlayerFactory {
         }
 
         player = makeFakePlayer(world);
-        storage.put(world.getDimensionType(), player);
+        storage.put(world.dimensionType(), player);
         return player;
     }
 
     public BabelFakePlayer getFakePlayer(@Nonnull ServerWorld world, @Nonnull BlockPos blockPos) {
         BabelFakePlayer fakePlayer = getFakePlayer(world);
-        fakePlayer.setPositionAndRotation(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 90, 90);
+        fakePlayer.absMoveTo(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 90, 90);
         return fakePlayer;
     }
 }

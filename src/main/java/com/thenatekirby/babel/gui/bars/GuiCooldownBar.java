@@ -8,6 +8,8 @@ import net.minecraft.util.text.StringTextComponent;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.thenatekirby.babel.gui.bars.GuiHorizontalBar.IHorizontalBarType;
+
 public class GuiCooldownBar extends GuiHorizontalBar {
     private static final IHorizontalBarType BAR_TYPE = new IHorizontalBarType() {
         @Override

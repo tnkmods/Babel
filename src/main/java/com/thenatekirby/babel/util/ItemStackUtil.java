@@ -38,11 +38,11 @@ public class ItemStackUtil {
     }
 
     public static boolean areItemStacksEqual(@Nonnull ItemStack lhs, @Nonnull ItemStack rhs) {
-        return ItemStack.areItemsEqual(lhs, rhs);
+        return ItemStack.isSame(lhs, rhs);
     }
 
     public static boolean areItemStackTagsEqual(@Nonnull ItemStack lhs, @Nonnull ItemStack rhs) {
-        return ItemStack.areItemStackTagsEqual(lhs, rhs);
+        return ItemStack.tagMatches(lhs, rhs);
     }
 
     public static boolean areItemStacksAndTagsEqual(@Nonnull ItemStack lhs, @Nonnull ItemStack rhs) {
@@ -50,7 +50,7 @@ public class ItemStackUtil {
     }
 
     public static void stripEnchantments(@Nonnull ItemStack itemStack) {
-        itemStack.removeChildTag("Enchantments");
-        itemStack.removeChildTag("StoredEnchantments");
+        itemStack.removeTagKey("Enchantments");
+        itemStack.removeTagKey("StoredEnchantments");
     }
 }

@@ -14,18 +14,18 @@ import javax.annotation.Nullable;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class TagUtil {
     public static boolean doesItemTagExist(@Nonnull ResourceLocation id) {
-        ITag<Item> itemTag = ItemTags.getCollection().get(id);
+        ITag<Item> itemTag = ItemTags.getAllTags().getTag(id);
         return (itemTag != null);
     }
 
     public static boolean doesBlockTagExist(@Nonnull ResourceLocation id) {
-        ITag<Block> blockTag = BlockTags.getCollection().get(id);
+        ITag<Block> blockTag = BlockTags.getAllTags().getTag(id);
         return (blockTag != null);
     }
 
     @Nullable
     public static ITag<Item> getItemTag(@Nonnull ResourceLocation id) {
-        return ItemTags.getCollection().get(id);
+        return ItemTags.getAllTags().getTag(id);
     }
 
     public static ItemStack firstItemInTag(@Nonnull ResourceLocation id) {
@@ -33,11 +33,11 @@ public class TagUtil {
     }
 
     public static ItemStack firstItemInTag(@Nonnull ResourceLocation id, int count) {
-        ITag<Item> itemTag = ItemTags.getCollection().get(id);
-        if (itemTag == null || itemTag.getAllElements().isEmpty()) {
+        ITag<Item> itemTag = ItemTags.getAllTags().getTag(id);
+        if (itemTag == null || itemTag.getValues().isEmpty()) {
             return ItemStack.EMPTY;
         }
 
-        return new ItemStack(itemTag.getAllElements().get(0), count);
+        return new ItemStack(itemTag.getValues().get(0), count);
     }
 }

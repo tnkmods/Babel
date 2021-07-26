@@ -71,10 +71,10 @@ public class GuiSlot extends GuiView {
 
         if (hintView instanceof GuiSlotHintView) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            itemRenderer.zLevel = 100.0f;
+            itemRenderer.blitOffset = 100.0f;
 
             RenderSystem.enableDepthTest();
-            RenderHelper.enableStandardItemLighting();
+            RenderHelper.turnBackOn();
 
             ((GuiSlotHintView) hintView).renderHintInto(getFrame(), matrixStack, getRenderer(), mouseX, mouseY, partialTicks);
 

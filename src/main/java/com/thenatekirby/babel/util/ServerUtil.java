@@ -10,11 +10,11 @@ import java.util.function.Consumer;
 
 public class ServerUtil {
     public static boolean isClientWorld(@Nonnull World world) {
-        return world.isRemote;
+        return world.isClientSide;
     }
 
     public static void ifServer(@Nullable World world, Consumer<ServerWorld> consumer) {
-        if (world == null || world.isRemote) {
+        if (world == null || world.isClientSide) {
             return;
         }
 
@@ -26,6 +26,6 @@ public class ServerUtil {
             return;
         }
 
-        ifServer(tileEntity.getWorld(), consumer);
+        ifServer(tileEntity.getLevel(), consumer);
     }
 }

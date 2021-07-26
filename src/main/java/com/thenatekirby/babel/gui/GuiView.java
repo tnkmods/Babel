@@ -169,7 +169,7 @@ public class GuiView extends Widget {
     // region Helpers
 
     protected void playButtonClick() {
-        Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     // endregion

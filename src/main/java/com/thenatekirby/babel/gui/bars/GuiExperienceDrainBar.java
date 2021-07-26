@@ -5,6 +5,8 @@ import com.thenatekirby.babel.core.ConstantProgress;
 
 import javax.annotation.Nullable;
 
+import com.thenatekirby.babel.gui.bars.GuiVerticalBar.IVerticalBarType;
+
 public class GuiExperienceDrainBar extends GuiVerticalBar {
     private static final IVerticalBarType BAR_TYPE = new IVerticalBarType() {
         @Override

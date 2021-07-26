@@ -22,7 +22,7 @@ public class ItemStackPredicates {
     public static Predicate<ItemStack> IS_TIERED = (stack) -> stack.getItem() instanceof TieredItem;
     public static Predicate<ItemStack> IS_ARMOR = (stack) -> stack.getItem() instanceof ArmorItem;
     public static Predicate<ItemStack> IS_REPAIRABLE = IForgeItemStack::isRepairable;
-    public static Predicate<ItemStack> IS_REPAIRABLE_WITH_DAMAGE = (stack) -> stack.isRepairable() && stack.getDamage() > 0;
+    public static Predicate<ItemStack> IS_REPAIRABLE_WITH_DAMAGE = (stack) -> stack.isRepairable() && stack.getDamageValue() > 0;
 
     public static Predicate<ItemStack> matchesItem(IItemProvider itemProvider) {
         return (stack) -> itemProvider.asItem().equals(stack.getItem());

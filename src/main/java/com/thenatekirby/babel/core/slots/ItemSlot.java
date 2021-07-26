@@ -167,7 +167,7 @@ public class ItemSlot implements IItemHandler {
     // region Extensions
 
     public void setItemStack(@Nonnull ItemStack itemStack) {
-        if (this.itemStack.getItem() != itemStack.getItem() || this.itemStack.getCount() != itemStack.getCount() || !this.itemStack.getEnchantmentTagList().equals(itemStack.getEnchantmentTagList())) {
+        if (this.itemStack.getItem() != itemStack.getItem() || this.itemStack.getCount() != itemStack.getCount() || !this.itemStack.getEnchantmentTags().equals(itemStack.getEnchantmentTags())) {
             this.itemStack = itemStack;
 
             onSlotChanged();
@@ -195,12 +195,12 @@ public class ItemSlot implements IItemHandler {
 
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
-        itemStack.write(nbt);
+        itemStack.save(nbt);
         return nbt;
     }
 
     public void deserializeNBT(@Nonnull CompoundNBT nbt) {
-        this.itemStack = ItemStack.read(nbt);
+        this.itemStack = ItemStack.of(nbt);
     }
 
     // endregion

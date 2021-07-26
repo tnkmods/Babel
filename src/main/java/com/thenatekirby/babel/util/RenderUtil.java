@@ -38,21 +38,21 @@ public class RenderUtil {
         ItemRenderer itemRenderer = getItemRenderer();
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
 
-        matrixStack.push();
+        matrixStack.pushPose();
         RenderSystem.enableDepthTest();
-        RenderHelper.enableStandardItemLighting();
+        RenderHelper.turnBackOn();
         if (scale != 1) {
             matrixStack.scale(scale, scale, scale);
         }
 
         RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
-        itemRenderer.renderItemAndEffectIntoGUI(new ItemStack(itemProvider), xPos, yPos);
+        RenderSystem.multMatrix(matrixStack.last().pose());
+        itemRenderer.renderAndDecorateItem(new ItemStack(itemProvider), xPos, yPos);
 
         RenderSystem.popMatrix();
-        RenderHelper.disableStandardItemLighting();
+        RenderHelper.turnOff();
         RenderSystem.disableDepthTest();
-        matrixStack.pop();
+        matrixStack.popPose();
 
 
     }
@@ -96,6 +96,6 @@ public class RenderUtil {
     // Textures
 
     public static void bindTexture(ResourceLocation resourceLocation) {
-        getMinecraft().getTextureManager().bindTexture(resourceLocation);
+        getMinecraft().getTextureManager().bind(resourceLocation);
     }
 }

@@ -38,29 +38,29 @@ public class BabelSlot extends Slot {
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack itemStack) {
+    public boolean mayPlace(@Nonnull ItemStack itemStack) {
         return !itemStack.isEmpty() && insertItem(itemStack, true).getCount() < itemStack.getCount();
     }
 
     @Override
     @Nonnull
-    public ItemStack getStack() {
+    public ItemStack getItem() {
         return inventory.getStackInSlot(0);
     }
 
     @Override
-    public void putStack(@Nonnull ItemStack itemStack) {
+    public void set(@Nonnull ItemStack itemStack) {
         inventory.setItemStack(itemStack);
     }
 
     @Override
-    public boolean canTakeStack(PlayerEntity entity) {
+    public boolean mayPickup(PlayerEntity entity) {
         return !inventory.extractItem(0, 1, true).isEmpty();
     }
 
     @Nonnull
     @Override
-    public ItemStack decrStackSize(int count) {
+    public ItemStack remove(int count) {
         return inventory.extractItem(0, count, false);
     }
 
@@ -70,13 +70,13 @@ public class BabelSlot extends Slot {
     }
 
     @Override
-    public void onSlotChanged() {
-        super.onSlotChanged();
+    public void setChanged() {
+        super.setChanged();
         inventory.onSlotChanged();
     }
 
     @Override
-    public int getItemStackLimit(ItemStack stack) {
+    public int getMaxStackSize(ItemStack stack) {
         return inventory.getSlotLimit(0);
     }
 }

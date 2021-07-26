@@ -59,22 +59,22 @@ public class WorkingArea {
             originPos = getOffsetPos(facing, originPos, x + 1, y + 1, z + 1);
         }
 
-        return new AxisAlignedBB(originPos).grow(x, y, z);
+        return new AxisAlignedBB(originPos).inflate(x, y, z);
     }
 
     private BlockPos getOffsetPos(Direction facing, BlockPos originalPos, int x, int y, int z) {
         switch (facing) {
             case NORTH: {
-                return originalPos.offset(Direction.NORTH, x);
+                return originalPos.relative(Direction.NORTH, x);
             }
             case SOUTH: {
-                return originalPos.offset(Direction.SOUTH, x);
+                return originalPos.relative(Direction.SOUTH, x);
             }
             case EAST: {
-                return originalPos.offset(Direction.EAST, z);
+                return originalPos.relative(Direction.EAST, z);
             }
             case WEST: {
-                return originalPos.offset(Direction.WEST, z);
+                return originalPos.relative(Direction.WEST, z);
             }
             default: {
                 return originalPos;

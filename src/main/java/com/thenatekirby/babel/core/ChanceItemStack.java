@@ -45,12 +45,12 @@ public class ChanceItemStack {
     // region Serialization
 
     public void write(@Nonnull PacketBuffer buffer) {
-        buffer.writeItemStack(itemStack);
+        buffer.writeItem(itemStack);
         buffer.writeFloat(chance);
     }
 
     public static ChanceItemStack read(@Nonnull PacketBuffer buffer) {
-        ItemStack itemStack = buffer.readItemStack();
+        ItemStack itemStack = buffer.readItem();
         float chance = buffer.readFloat();
         return new ChanceItemStack(itemStack, chance);
     }
@@ -60,15 +60,15 @@ public class ChanceItemStack {
         ItemStack itemStack;
         float chance;
 
-        if (JSONUtils.hasField(json, "item")) {
-            itemStack = ShapedRecipe.deserializeItem(json);
+        if (JSONUtils.isValidNode(json, "item")) {
+            itemStack = ShapedRecipe.itemFromJson(json);
 
         } else {
             return null;
         }
 
-        if (JSONUtils.hasField(json, "chance")) {
-            chance = JSONUtils.getFloat(json, "chance");
+        if (JSONUtils.isValidNode(json, "chance")) {
+            chance = JSONUtils.getAsFloat(json, "chance");
 
         } else {
             chance = 1.0f;

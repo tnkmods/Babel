@@ -9,6 +9,6 @@ import java.util.List;
 
 @Mixin(Container.class)
 public interface ContainerMixin {
-    @Accessor("listeners")
+    @Accessor("containerListeners")
     List<IContainerListener> getListeners();
 }

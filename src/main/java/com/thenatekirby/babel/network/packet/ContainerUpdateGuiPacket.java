@@ -44,8 +44,8 @@ public class ContainerUpdateGuiPacket extends BabelPacket {
 
                 ClientPlayerEntity playerEntity = Minecraft.getInstance().player;
 
-                if (playerEntity != null && playerEntity.openContainer instanceof BabelContainer && playerEntity.openContainer.windowId == packet.windowId) {
-                    ((BabelContainer) playerEntity.openContainer).receive(packet);
+                if (playerEntity != null && playerEntity.containerMenu instanceof BabelContainer && playerEntity.containerMenu.containerId == packet.windowId) {
+                    ((BabelContainer) playerEntity.containerMenu).receive(packet);
                 }
             });
 

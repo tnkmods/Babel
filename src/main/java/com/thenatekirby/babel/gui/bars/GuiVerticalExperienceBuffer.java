@@ -14,6 +14,8 @@ import net.minecraft.util.text.StringTextComponent;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.thenatekirby.babel.gui.bars.GuiVerticalBar.IVerticalBarType;
+
 public class GuiVerticalExperienceBuffer extends GuiVerticalBar {
     private static IVerticalBarType BAR_TYPE = new IVerticalBarType() {
         @Override

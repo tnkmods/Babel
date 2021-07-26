@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(SetCount.class)
 public interface SetCountMixin {
-    @Accessor("countRange")
+    @Accessor("value")
     IRandomRange getCountRange();
 }

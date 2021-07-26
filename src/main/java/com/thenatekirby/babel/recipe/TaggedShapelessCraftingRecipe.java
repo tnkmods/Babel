@@ -38,14 +38,14 @@ public class TaggedShapelessCraftingRecipe extends ShapelessRecipe {
 
     @Override
     @Nonnull
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return result.makeItemStack();
     }
 
     @Override
     @Nonnull
-    public ItemStack getCraftingResult(CraftingInventory inv) {
-        return getRecipeOutput().copy();
+    public ItemStack assemble(CraftingInventory inv) {
+        return getResultItem().copy();
     }
 
     @Override
@@ -60,15 +60,15 @@ public class TaggedShapelessCraftingRecipe extends ShapelessRecipe {
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<TaggedShapelessCraftingRecipe> {
         @Override
         @Nonnull
-        public TaggedShapelessCraftingRecipe read(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
-            String group = JSONUtils.getString(json, "group", "");
-            NonNullList<Ingredient> ingredients = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
+        public TaggedShapelessCraftingRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+            String group = JSONUtils.getAsString(json, "group", "");
+            NonNullList<Ingredient> ingredients = readIngredients(JSONUtils.getAsJsonArray(json, "ingredients"));
 
-            JsonObject resultJson = JSONUtils.getJsonObject(json, "result");
+            JsonObject resultJson = JSONUtils.getAsJsonObject(json, "result");
             if (resultJson.has("tag")) {
-                return new TaggedShapelessCraftingRecipe(recipeId, group, RecipeIngredient.fromTag(JSONUtils.getString(resultJson, "tag")), ingredients);
+                return new TaggedShapelessCraftingRecipe(recipeId, group, RecipeIngredient.fromTag(JSONUtils.getAsString(resultJson, "tag")), ingredients);
             } else {
-                return new TaggedShapelessCraftingRecipe(recipeId, group, RecipeIngredient.fromItem(JSONUtils.getString(resultJson, "item")), ingredients);
+                return new TaggedShapelessCraftingRecipe(recipeId, group, RecipeIngredient.fromItem(JSONUtils.getAsString(resultJson, "item")), ingredients);
             }
         }
 
@@ -76,8 +76,8 @@ public class TaggedShapelessCraftingRecipe extends ShapelessRecipe {
             NonNullList<Ingredient> list = NonNullList.create();
 
             for(int i = 0; i < ingredientArray.size(); ++i) {
-                Ingredient ingredient = Ingredient.deserialize(ingredientArray.get(i));
-                if (!ingredient.hasNoMatchingItems()) {
+                Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
+                if (!ingredient.isEmpty()) {
                     list.add(ingredient);
                 }
             }
@@ -87,14 +87,14 @@ public class TaggedShapelessCraftingRecipe extends ShapelessRecipe {
 
         @Nullable
         @Override
-        public TaggedShapelessCraftingRecipe read(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
-            String group = buffer.readString(32767);
+        public TaggedShapelessCraftingRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
+            String group = buffer.readUtf(32767);
             int size = buffer.readVarInt();
 
             NonNullList<Ingredient> list = NonNullList.withSize(size, Ingredient.EMPTY);
 
             for (int idx = 0; idx < size; idx++) {
-                list.set(idx, Ingredient.read(buffer));
+                list.set(idx, Ingredient.fromNetwork(buffer));
             }
 
             RecipeIngredient result = RecipeIngredient.read(buffer);
@@ -102,12 +102,12 @@ public class TaggedShapelessCraftingRecipe extends ShapelessRecipe {
         }
 
         @Override
-        public void write(@Nonnull PacketBuffer buffer, @Nonnull TaggedShapelessCraftingRecipe recipe) {
-            buffer.writeString(recipe.getGroup());
+        public void toNetwork(@Nonnull PacketBuffer buffer, @Nonnull TaggedShapelessCraftingRecipe recipe) {
+            buffer.writeUtf(recipe.getGroup());
             buffer.writeVarInt(recipe.getIngredients().size());
 
             for (Ingredient ingredient : recipe.getIngredients()) {
-                ingredient.write(buffer);
+                ingredient.toNetwork(buffer);
             }
 
             recipe.result.write(buffer);

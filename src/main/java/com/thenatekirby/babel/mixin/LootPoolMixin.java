@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mixin(LootPool.class)
 public interface LootPoolMixin {
-    @Accessor("lootEntries")
+    @Accessor("entries")
     List<LootEntry> getLootEntries();
 
     @Accessor("conditions")

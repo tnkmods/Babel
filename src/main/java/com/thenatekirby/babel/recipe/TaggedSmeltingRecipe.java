@@ -41,13 +41,13 @@ public class TaggedSmeltingRecipe extends FurnaceRecipe {
 
     @Override
     @Nonnull
-    public ItemStack getCraftingResult(IInventory inv) {
-        return getRecipeOutput();
+    public ItemStack assemble(IInventory inv) {
+        return getResultItem();
     }
 
     @Override
     @Nonnull
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return result.makeItemStack();
     }
 
@@ -57,26 +57,26 @@ public class TaggedSmeltingRecipe extends FurnaceRecipe {
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<TaggedSmeltingRecipe> {
         @Override
         @Nonnull
-        public TaggedSmeltingRecipe read(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
-            String group = JSONUtils.getString(json, "group", "");
-            Ingredient input = Ingredient.deserialize(JSONUtils.getJsonObject(json, "ingredient"));
+        public TaggedSmeltingRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
+            String group = JSONUtils.getAsString(json, "group", "");
+            Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "ingredient"));
 
-            int experience = JSONUtils.getInt(json, "experience");
-            int cookingTime = JSONUtils.getInt(json, "cookingtime");
+            int experience = JSONUtils.getAsInt(json, "experience");
+            int cookingTime = JSONUtils.getAsInt(json, "cookingtime");
 
-            JsonObject resultJson = JSONUtils.getJsonObject(json, "result");
+            JsonObject resultJson = JSONUtils.getAsJsonObject(json, "result");
             if (resultJson.has("tag")) {
-                return new TaggedSmeltingRecipe(recipeId, group, input, RecipeIngredient.fromTag(JSONUtils.getString(resultJson, "tag")), experience, cookingTime);
+                return new TaggedSmeltingRecipe(recipeId, group, input, RecipeIngredient.fromTag(JSONUtils.getAsString(resultJson, "tag")), experience, cookingTime);
             } else {
-                return new TaggedSmeltingRecipe(recipeId, group, input, RecipeIngredient.fromItem(JSONUtils.getString(resultJson, "item")), experience, cookingTime);
+                return new TaggedSmeltingRecipe(recipeId, group, input, RecipeIngredient.fromItem(JSONUtils.getAsString(resultJson, "item")), experience, cookingTime);
             }
         }
 
         @Nullable
         @Override
-        public TaggedSmeltingRecipe read(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
-            String group = buffer.readString();
-            Ingredient input = Ingredient.read(buffer);
+        public TaggedSmeltingRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
+            String group = buffer.readUtf();
+            Ingredient input = Ingredient.fromNetwork(buffer);
             RecipeIngredient result = RecipeIngredient.read(buffer);
             float experience = buffer.readFloat();
             int cookTime = buffer.readVarInt();
@@ -84,12 +84,12 @@ public class TaggedSmeltingRecipe extends FurnaceRecipe {
         }
 
         @Override
-        public void write(@Nonnull PacketBuffer buffer, @Nonnull TaggedSmeltingRecipe recipe) {
-            buffer.writeString(recipe.group);
-            recipe.ingredient.write(buffer);
+        public void toNetwork(@Nonnull PacketBuffer buffer, @Nonnull TaggedSmeltingRecipe recipe) {
+            buffer.writeUtf(recipe.group);
+            recipe.ingredient.toNetwork(buffer);
             recipe.result.write(buffer);
             buffer.writeFloat(recipe.experience);
-            buffer.writeVarInt(recipe.cookTime);
+            buffer.writeVarInt(recipe.cookingTime);
         }
     }
 

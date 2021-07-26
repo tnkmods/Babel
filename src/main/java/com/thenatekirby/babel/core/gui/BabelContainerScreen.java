@@ -60,10 +60,10 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
         }
 
         this.buttons.addAll(
-                container.inventorySlots
+                menu.slots
                         .stream()
                         .filter(slot -> slot instanceof BabelSlot)
-                        .map(slot -> new GuiSlot(slot.xPos, slot.yPos, GuiSlot.SlotType.DEFAULT, ((BabelSlot) slot).getHintView()))
+                        .map(slot -> new GuiSlot(slot.x, slot.y, GuiSlot.SlotType.DEFAULT, ((BabelSlot) slot).getHintView()))
                         .map(guiSlot -> guiSlot.setRenderer(renderer))
                         .collect(Collectors.toList())
         );
@@ -113,7 +113,7 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        matrixStack.push();
+        matrixStack.pushPose();
 
         this.pointX = mouseX - getGuiLeft();
         this.pointY = mouseY - getGuiTop();
@@ -124,38 +124,38 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
         this.subviews.forEach(subview -> subview.render(matrixStack, mouseX, mouseY, partialTicks));
 
 
-        renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        renderTooltip(matrixStack, mouseX, mouseY);
         drawTooltips(matrixStack);
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY) {
+    protected void renderLabels(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY) {
         RenderUtil.resetColor();
 
         this.drawTitleTextAt(matrixStack, 8.0F, 8.0F);
 //        this.drawCenteredTitleText(matrixStack, RenderUtil.getDefaultTextColor());
-        this.drawInventoryTextAt(matrixStack,8.0F, (float)(this.ySize - 96 + 2), RenderUtil.getDefaultTextColor());
+        this.drawInventoryTextAt(matrixStack,8.0F, (float)(this.imageHeight - 96 + 2), RenderUtil.getDefaultTextColor());
 
         for (Widget widget : this.buttons) {
             if (widget.isMouseOver(mouseX, mouseY)) {
-                widget.renderToolTip(matrixStack, mouseX - guiLeft, mouseY - guiTop);
+                widget.renderToolTip(matrixStack, mouseX - leftPos, mouseY - topPos);
                 break;
             }
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(@Nonnull MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@Nonnull MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderUtil.resetColor();
 
         ResourceLocation resourceLocation = getBackgroundResourceLocation();
         RenderUtil.bindTexture(resourceLocation);
 
-        int relX = (this.width - this.xSize) / 2;
-        int relY = (this.height - this.ySize) / 2;
+        int relX = (this.width - this.imageWidth) / 2;
+        int relY = (this.height - this.imageHeight) / 2;
 
-        this.blit(matrixStack, relX, relY, 0, 0, this.xSize, this.ySize);
+        this.blit(matrixStack, relX, relY, 0, 0, this.imageWidth, this.imageHeight);
 
         for (GuiView view : subviews) {
             if (view instanceof IBackgroundGuiView) {
@@ -170,7 +170,7 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
             List<ITextComponent> tooltips = new ArrayList<>();
             targetView.addTooltips(tooltips);
 
-            GuiUtils.drawHoveringText(matrixStack, tooltips, pointX + guiLeft, pointY + guiTop, width, height, -1, font);
+            GuiUtils.drawHoveringText(matrixStack, tooltips, pointX + leftPos, pointY + topPos, width, height, -1, font);
         }
     }
 
@@ -223,12 +223,12 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
     }
 
     protected void drawTitleTextAt(@Nonnull MatrixStack matrixStack, float x, float y, int color) {
-        this.font.drawString(matrixStack, this.title.getString(), x, y, color);
+        this.font.draw(matrixStack, this.title.getString(), x, y, color);
     }
 
     protected void drawCenteredTitleText(@Nonnull MatrixStack matrixStack, int color) {
         String title = this.title.getString();
-        this.font.drawString(matrixStack, title, (float)(this.xSize / 2 - this.font.getStringWidth(title) / 2), 6.0F, color);
+        this.font.draw(matrixStack, title, (float)(this.imageWidth / 2 - this.font.width(title) / 2), 6.0F, color);
     }
 
     protected void drawInventoryTextAt(@Nonnull MatrixStack matrixStack, float x, float y) {
@@ -236,7 +236,7 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
     }
 
     protected void drawInventoryTextAt(@Nonnull MatrixStack matrixStack, float x, float y, int color) {
-        this.font.drawString(matrixStack, this.playerInventory.getDisplayName().getString(), x, y, color);
+        this.font.draw(matrixStack, this.inventory.getDisplayName().getString(), x, y, color);
     }
 
     // endregion

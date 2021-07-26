@@ -51,12 +51,12 @@ public class BabelBlockLootTableProvider extends LootTableProvider {
     }
 
     @Override
-    public void act(@Nonnull DirectoryCache cache) {
+    public void run(@Nonnull DirectoryCache cache) {
         addBlockLootTables(new Builder());
 
         Map<ResourceLocation, LootTable> tables = new HashMap<>();
         for (Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet()) {
-            tables.put(entry.getKey().getLootTable(), entry.getValue().setParameterSet(LootParameterSets.BLOCK).build());
+            tables.put(entry.getKey().getLootTable(), entry.getValue().setParamSet(LootParameterSets.BLOCK).build());
         }
 
         writeLootTables(cache, tables);
@@ -69,7 +69,7 @@ public class BabelBlockLootTableProvider extends LootTableProvider {
             Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
 
             try {
-                IDataProvider.save(GSON, cache, LootTableManager.toJson(lootTable), path);
+                IDataProvider.save(GSON, cache, LootTableManager.serialize(lootTable), path);
 
             } catch (IOException e) {
                 Babel.getLogger().error("Unable to write loot table - {}", path, e);
@@ -85,29 +85,29 @@ public class BabelBlockLootTableProvider extends LootTableProvider {
     public class Builder {
         public void blockDroppingSelf(IBlockProvider blockProvider) {
             String name = Objects.requireNonNull(blockProvider.asBlock().getRegistryName()).getPath();
-            LootPool.Builder builder = LootPool.builder()
+            LootPool.Builder builder = LootPool.lootPool()
                     .name(name)
-                    .rolls(ConstantRange.of(1))
-                    .addEntry(ItemLootEntry.builder(blockProvider.asBlock()));
+                    .setRolls(ConstantRange.exactly(1))
+                    .add(ItemLootEntry.lootTableItem(blockProvider.asBlock()));
 
-            LootTable.Builder lootTableBuilder = LootTable.builder().addLootPool(builder);
+            LootTable.Builder lootTableBuilder = LootTable.lootTable().withPool(builder);
             lootTables.put(blockProvider.asBlock(), lootTableBuilder);
         }
 
         public void blockRetainingInventory(IBlockProvider blockProvider) {
             String name = Objects.requireNonNull(blockProvider.asBlock().getRegistryName()).getPath();
-            LootPool.Builder builder = LootPool.builder()
+            LootPool.Builder builder = LootPool.lootPool()
                     .name(name)
-                    .rolls(ConstantRange.of(1))
-                    .addEntry(ItemLootEntry.builder(blockProvider.asBlock())
-                            .acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-                            .acceptFunction(CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY)
-                                    .addOperation("inv", "BlockEntityTag.inv", CopyNbt.Action.REPLACE))
-                            .acceptFunction(SetContents.builderIn()
-                                    .addLootEntry(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft", "contents"))))
+                    .setRolls(ConstantRange.exactly(1))
+                    .add(ItemLootEntry.lootTableItem(blockProvider.asBlock())
+                            .apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+                            .apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+                                    .copy("inv", "BlockEntityTag.inv", CopyNbt.Action.REPLACE))
+                            .apply(SetContents.setContents()
+                                    .withEntry(DynamicLootEntry.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                     );
 
-            LootTable.Builder lootTableBuilder =  LootTable.builder().addLootPool(builder);
+            LootTable.Builder lootTableBuilder =  LootTable.lootTable().withPool(builder);
             lootTables.put(blockProvider.asBlock(), lootTableBuilder);
         }
     }

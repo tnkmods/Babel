@@ -87,22 +87,22 @@ public class RecipeIngredient {
 
     public void write(@Nonnull PacketBuffer buffer) {
         buffer.writeBoolean(isTag);
-        buffer.writeString(resultId);
+        buffer.writeUtf(resultId);
         buffer.writeInt(count);
     }
 
     public static RecipeIngredient read(@Nonnull PacketBuffer buffer) {
         boolean isTag = buffer.readBoolean();
-        String resultId = buffer.readString();
+        String resultId = buffer.readUtf();
         int count = buffer.readInt();
         return new RecipeIngredient(isTag, resultId, count);
     }
 
     public Ingredient makeIngredient() {
         if (this.isTag) {
-            return Ingredient.fromTag(TagUtil.getItemTag(new ResourceLocation(this.resultId)));
+            return Ingredient.of(TagUtil.getItemTag(new ResourceLocation(this.resultId)));
         } else {
-            return Ingredient.fromItems(ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.resultId)));
+            return Ingredient.of(ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.resultId)));
         }
     }
 }

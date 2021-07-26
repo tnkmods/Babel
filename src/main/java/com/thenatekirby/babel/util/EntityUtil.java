@@ -17,11 +17,11 @@ public class EntityUtil {
     }
 
     public static boolean isBoss(LivingEntity livingEntity) {
-        return !livingEntity.isNonBoss();
+        return !livingEntity.canChangeDimensions();
     }
 
     public static boolean isNonBoss(LivingEntity livingEntity) {
-        return livingEntity.isNonBoss();
+        return livingEntity.canChangeDimensions();
     }
 
     public static boolean isPlayer(LivingEntity livingEntity) {
@@ -33,7 +33,7 @@ public class EntityUtil {
     }
 
     public static boolean isTamed(LivingEntity livingEntity) {
-        return livingEntity instanceof TameableEntity && ((TameableEntity) livingEntity).isTamed();
+        return livingEntity instanceof TameableEntity && ((TameableEntity) livingEntity).isTame();
     }
 
     public static boolean isTamedByPlayer(LivingEntity livingEntity, PlayerEntity playerEntity) {
@@ -41,15 +41,15 @@ public class EntityUtil {
             return false;
         }
 
-        UUID ownerID = ((TameableEntity) livingEntity).getOwnerId();
+        UUID ownerID = ((TameableEntity) livingEntity).getOwnerUUID();
         if (ownerID == null) {
             return false;
         }
 
-        return ownerID.equals(playerEntity.getUniqueID());
+        return ownerID.equals(playerEntity.getUUID());
     }
 
     public static ITextComponent getDisplayName(@Nonnull String entityId) {
-        return EntityType.byKey(entityId).map(EntityType::getName).orElse(new StringTextComponent(entityId));
+        return EntityType.byString(entityId).map(EntityType::getDescription).orElse(new StringTextComponent(entityId));
     }
 }

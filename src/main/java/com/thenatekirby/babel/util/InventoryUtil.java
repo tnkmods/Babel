@@ -13,16 +13,16 @@ public class InventoryUtil {
             return ItemStack.EMPTY;
         }
 
-        return Minecraft.getInstance().player.inventory.getItemStack();
+        return Minecraft.getInstance().player.inventory.getCarried();
     }
 
     public static boolean addToPlayerInventory(PlayerEntity entity, ItemStack itemStack) {
-        return entity.inventory.addItemStackToInventory(itemStack);
+        return entity.inventory.add(itemStack);
     }
 
     public static void addToPlayerInventoryOrDrop(PlayerEntity entity, ItemStack itemStack) {
         if (!addToPlayerInventory(entity, itemStack)) {
-            entity.dropItem(itemStack, true);
+            entity.drop(itemStack, true);
         }
     }
 }

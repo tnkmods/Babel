@@ -32,8 +32,8 @@ public class BackgroundDrawable implements IDrawable {
         RenderSystem.clearCurrentColor();
 //        matrixStack.push();
         RenderSystem.pushMatrix();
-        Minecraft.getInstance().getTextureManager().bindTexture(this.resource);
-        RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
+        Minecraft.getInstance().getTextureManager().bind(this.resource);
+        RenderSystem.multMatrix(matrixStack.last().pose());
         GuiUtils.drawTexturedModalRect(matrixStack, 0, 0, 0, 0, width, height, 0);
         RenderSystem.popMatrix();
     }

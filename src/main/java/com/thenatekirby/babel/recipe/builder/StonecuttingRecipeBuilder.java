@@ -71,7 +71,7 @@ public class StonecuttingRecipeBuilder {
         }
 
         @Override
-        public void serialize(JsonObject json) {
+        public void serializeRecipeData(JsonObject json) {
             if (!this.conditions.isEmpty()) {
                 JsonArray conditionsJson = new JsonArray();
                 for (IRecipeCondition condition : conditions) {
@@ -88,25 +88,25 @@ public class StonecuttingRecipeBuilder {
 
         @Override
         @Nonnull
-        public ResourceLocation getID() {
+        public ResourceLocation getId() {
             return recipeId;
         }
 
         @Override
         @Nonnull
-        public IRecipeSerializer<?> getSerializer() {
-            return IRecipeSerializer.STONECUTTING;
+        public IRecipeSerializer<?> getType() {
+            return IRecipeSerializer.STONECUTTER;
         }
 
         @Nullable
         @Override
-        public JsonObject getAdvancementJson() {
+        public JsonObject serializeAdvancement() {
             return null;
         }
 
         @Nullable
         @Override
-        public ResourceLocation getAdvancementID() {
+        public ResourceLocation getAdvancementId() {
             return null;
         }
     }

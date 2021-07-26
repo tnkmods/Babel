@@ -37,6 +37,6 @@ public class JeiGuiRenderer implements IGuiRenderer {
     @Nonnull
     @Override
     public FontRenderer getFontRenderer() {
-        return Minecraft.getInstance().fontRenderer;
+        return Minecraft.getInstance().font;
     }
 }

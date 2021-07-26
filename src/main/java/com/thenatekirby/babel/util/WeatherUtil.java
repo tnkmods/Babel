@@ -13,11 +13,11 @@ public class WeatherUtil {
     // region Info
 
     public static boolean isRaining(@Nonnull World world) {
-        return world.getWorldInfo().isRaining();
+        return world.getLevelData().isRaining();
     }
 
     public static boolean isStorming(@Nonnull World world) {
-        return world.getWorldInfo().isThundering();
+        return world.getLevelData().isThundering();
     }
 
     public static boolean isClear(@Nonnull World world) {
@@ -43,27 +43,27 @@ public class WeatherUtil {
     // region Manipulation
 
     public static void setClear(@Nonnull ServerWorld world) {
-        world.func_241113_a_(6000, 0, false, false);
+        world.setWeatherParameters(6000, 0, false, false);
     }
 
     public static void setClear(@Nonnull ServerWorld world, int time) {
-        world.func_241113_a_(time, 0, false, false);
+        world.setWeatherParameters(time, 0, false, false);
     }
 
     public static void setRaining(@Nonnull ServerWorld world) {
-        world.func_241113_a_(0, 6000, true, false);
+        world.setWeatherParameters(0, 6000, true, false);
     }
 
     public static void setRaining(@Nonnull ServerWorld world, int time) {
-        world.func_241113_a_(0, time, true, false);
+        world.setWeatherParameters(0, time, true, false);
     }
 
     public static void setStorming(@Nonnull ServerWorld world) {
-        world.func_241113_a_(0, 6000, true, true);
+        world.setWeatherParameters(0, 6000, true, true);
     }
 
     public static void setStorming(@Nonnull ServerWorld world, int time) {
-        world.func_241113_a_(0, time, true, true);
+        world.setWeatherParameters(0, time, true, true);
     }
 
     // endregion

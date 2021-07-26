@@ -15,7 +15,7 @@ public class EmptyInventory implements IInventory {
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 0;
     }
 
@@ -26,39 +26,39 @@ public class EmptyInventory implements IInventory {
 
     @Override
     @Nonnull
-    public ItemStack getStackInSlot(int i) {
+    public ItemStack getItem(int i) {
         return ItemStack.EMPTY;
     }
 
     @Override
     @Nonnull
-    public ItemStack decrStackSize(int i, int i1) {
+    public ItemStack removeItem(int i, int i1) {
         return ItemStack.EMPTY;
     }
 
     @Override
     @Nonnull
-    public ItemStack removeStackFromSlot(int i) {
+    public ItemStack removeItemNoUpdate(int i) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setInventorySlotContents(int i, @Nonnull ItemStack itemStack) {
+    public void setItem(int i, @Nonnull ItemStack itemStack) {
 
     }
 
     @Override
-    public void markDirty() {
+    public void setChanged() {
 
     }
 
     @Override
-    public boolean isUsableByPlayer(@Nonnull PlayerEntity playerEntity) {
+    public boolean stillValid(@Nonnull PlayerEntity playerEntity) {
         return false;
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
 
     }
 

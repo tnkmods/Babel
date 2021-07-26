@@ -58,7 +58,7 @@ public class GuiToggleWorkingAreaButton extends GuiView implements IClickableGui
             tooltips.add(new StringTextComponent("Working Area: Hidden"));
         }
 
-        tooltips.add(new StringTextComponent("Click to toggle").mergeStyle(TextFormatting.GRAY));
+        tooltips.add(new StringTextComponent("Click to toggle").withStyle(TextFormatting.GRAY));
 //        RedstoneMode redstoneMode = provider.getRedstoneMode();
 //        if (redstoneMode.isIgnored()) {
 //            tooltips.add(new StringTextComponent("Redstone Mode: Ignored"));

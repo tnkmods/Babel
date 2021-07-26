@@ -58,13 +58,13 @@ public class ChanceRecipeOutput {
     }
 
     public void write(@Nonnull PacketBuffer buffer) {
-        buffer.writeString(resultId);
+        buffer.writeUtf(resultId);
         buffer.writeInt(count);
         buffer.writeFloat(chance);
     }
 
     public static ChanceRecipeOutput read(@Nonnull PacketBuffer buffer) {
-        String resultId = buffer.readString();
+        String resultId = buffer.readUtf();
         int count = buffer.readInt();
         float chance = buffer.readFloat();
         return new ChanceRecipeOutput(resultId, count, chance);
