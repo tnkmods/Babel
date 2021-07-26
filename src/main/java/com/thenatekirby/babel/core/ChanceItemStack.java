@@ -1,8 +1,10 @@
 package com.thenatekirby.babel.core;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 
@@ -73,6 +75,35 @@ public class ChanceItemStack {
         }
 
         return new ChanceItemStack(itemStack, chance);
+    }
+
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = itemStack.serializeNBT();
+        nbt.putFloat("chance", chance);
+        return nbt;
+    }
+
+    public JsonElement serializeJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("item", itemStack.getItem().getRegistryName().toString());
+
+        if (itemStack.getCount() > 1) {
+            jsonObject.addProperty("count", itemStack.getCount());
+        }
+
+        jsonObject.addProperty("chance", chance);
+        return jsonObject;
+    }
+
+    public JsonElement serializeItemStackJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("item", itemStack.getItem().getRegistryName().toString());
+
+        if (itemStack.getCount() > 1) {
+            jsonObject.addProperty("count", itemStack.getCount());
+        }
+
+        return jsonObject;
     }
 
     // endregion

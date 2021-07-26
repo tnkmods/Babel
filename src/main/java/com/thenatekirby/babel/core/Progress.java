@@ -25,6 +25,10 @@ public class Progress implements IProgress, INBTSerializable<CompoundNBT> {
         this.current = current;
     }
 
+    public static Progress make() {
+        return new Progress();
+    }
+
     // ====---------------------------------------------------------------------------====
     // region Getters & Setters
 
@@ -35,7 +39,6 @@ public class Progress implements IProgress, INBTSerializable<CompoundNBT> {
     public void setMax(int max) {
         this.max = max;
     }
-
 
     // endregion
     // ====---------------------------------------------------------------------------====
@@ -57,6 +60,11 @@ public class Progress implements IProgress, INBTSerializable<CompoundNBT> {
         this.current = 0;
     }
 
+    public void clear() {
+        reset();
+        setMax(0);
+    }
+
     // endregion
     // ====---------------------------------------------------------------------------====
     // region IProgress
@@ -73,7 +81,7 @@ public class Progress implements IProgress, INBTSerializable<CompoundNBT> {
 
     @Override
     public int getProgressCurrent() {
-        return current;
+        return Math.max(0, Math.min(current, max));
     }
 
     // endregion

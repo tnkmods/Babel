@@ -1,6 +1,7 @@
 package com.thenatekirby.babel.condition;
 
 import com.google.gson.JsonObject;
+import com.thenatekirby.babel.core.MutableResourceLocation;
 import com.thenatekirby.babel.integration.Mods;
 import net.minecraft.util.ResourceLocation;
 
@@ -19,6 +20,10 @@ public class ModLoadedCondition implements IRecipeCondition {
 
     public ModLoadedCondition(@Nonnull String modId) {
         this.modId = modId;
+    }
+
+    public ModLoadedCondition(@Nonnull MutableResourceLocation resourceLocation) {
+        this(resourceLocation.getRoot());
     }
 
     @Nonnull

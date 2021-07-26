@@ -78,7 +78,8 @@ public class InventoryItemHandler implements IItemHandler {
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         int inputSlotCount = inputSlots.size();
-        if (slot < inputSlotCount || slot > getSlots()) {
+        int maxOutputSlot = inputSlotCount + outputSlots.size();
+        if (slot < inputSlotCount || slot >= maxOutputSlot) {
             return ItemStack.EMPTY;
         }
 

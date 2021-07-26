@@ -46,6 +46,7 @@ public class BabelContainer extends Container {
     private PlayerEntity playerEntity;
 
     private SyncableProgress powerProgress;
+    protected BlockPos blockPos;
 
     protected BabelContainer(@Nonnull ContainerConfig containerConfig, int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
         super(containerConfig.getContainerType(), windowId);
@@ -54,6 +55,7 @@ public class BabelContainer extends Container {
         this.playerInventory = new InvWrapper(playerInventory);
         this.world = world;
         this.playerEntity = player;
+        this.blockPos = pos;
 
         TileEntity tileEntity = world.getTileEntity(pos);
 

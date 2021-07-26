@@ -72,6 +72,22 @@ public class BabelEnergyStorage implements IEnergyStorage, INBTSerializable<Comp
         this.energyChangedObserver = energyChangedObserver;
     }
 
+    public int getMaxReceive() {
+        return maxReceive;
+    }
+
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region Helpers
+
+    public void consumeEnergy(int energy) {
+        this.setEnergyStored(energyStored - energy);
+    }
+
+    public boolean hasAtleast(int energy) {
+        return this.energyStored >= energy;
+    }
+
     // endregion
     // ====---------------------------------------------------------------------------====
     // region IEnergyStorage
@@ -152,6 +168,10 @@ public class BabelEnergyStorage implements IEnergyStorage, INBTSerializable<Comp
         setEnergyStored(buffer.readInt());
     }
 
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region IProgress
+
     @Override
     public int getProgressMin() {
         return 0;
@@ -166,4 +186,6 @@ public class BabelEnergyStorage implements IEnergyStorage, INBTSerializable<Comp
     public int getProgressCurrent() {
         return energyStored;
     }
+
+    // endregion
 }

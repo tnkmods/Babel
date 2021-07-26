@@ -1,9 +1,13 @@
 package com.thenatekirby.babel.core.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.thenatekirby.babel.api.IGuiRenderer;
+import com.thenatekirby.babel.gui.core.Frame;
+import com.thenatekirby.babel.util.RenderUtil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
@@ -11,37 +15,44 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiRenderer {
+public class GuiRenderer implements IGuiRenderer {
     private BabelContainerScreen<?> screen;
+    private ResourceLocation currentLocation = null;
 
     public GuiRenderer(BabelContainerScreen<?> screen) {
         this.screen = screen;
     }
 
-    public void drawTexturedRect(@Nonnull MatrixStack matrixStack, int x, int y, int textureX, int textureY, int width, int height) {
-        screen.blit(matrixStack, x, y, textureX, textureY, width, height);
+    @Override
+    public void bindTexture(@Nonnull ResourceLocation resourceLocation) {
+        if (!resourceLocation.equals(currentLocation)) {
+//            currentLocation = resourceLocation;
+            RenderUtil.bindTexture(resourceLocation);
+        }
     }
 
-    public void drawTexturedIcon(@Nonnull MatrixStack matrixStack, int x, int y, int width, int height, TextureAtlasSprite sprite) {
-        ContainerScreen.blit(matrixStack, x, y, screen.getBlitOffset(), width, height, sprite);
-    }
-
+    @Override
     public int getGuiLeft() {
         return screen.getGuiLeft();
     }
 
+    @Override
     public int getGuiTop() {
         return screen.getGuiTop();
     }
 
+    @Override
     public int getGuiWidth() {
-        return screen.width;
+        return screen.getXSize();
     }
 
+    @Override
     public int getGuiHeight() {
-        return screen.height;
+        return screen.getYSize();
     }
 
+    @Override
+    @Nonnull
     public FontRenderer getFontRenderer() {
         return screen.getFontRenderer();
     }

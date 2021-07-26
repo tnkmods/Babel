@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.thenatekirby.babel.api.IBlockProvider;
 import com.thenatekirby.babel.condition.IRecipeCondition;
 import com.thenatekirby.babel.core.RecipeIngredient;
 import net.minecraft.data.IFinishedRecipe;
@@ -71,6 +72,10 @@ public class ShapedRecipeBuilder  {
         return withResult(itemProvider, 1);
     }
 
+//    public ShapedRecipeBuilder withResult(IBlockProvider provider) {
+//        return withResult(provider.asBlock(), 1);
+//    }
+
     public ShapedRecipeBuilder withResult(IItemProvider itemProvider, int count) {
         return withResult(Objects.requireNonNull(itemProvider.asItem().getRegistryName()).toString(), count);
     }
@@ -78,6 +83,31 @@ public class ShapedRecipeBuilder  {
     public ShapedRecipeBuilder withCondition(IRecipeCondition condition) {
         this.conditions.add(condition);
         return this;
+    }
+
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region Helpers
+
+    public ShapedRecipeBuilder withStandardStoneWallRecipe(RecipeIngredient ingredient, IItemProvider result) {
+        return this.withPatternLine("XXX")
+                .withPatternLine("XXX")
+                .withKey('X', ingredient)
+                .withResult(result, 6);
+    }
+
+    public ShapedRecipeBuilder withStandardSlabRecipe(RecipeIngredient ingredient, IItemProvider result) {
+        return this.withPatternLine("XXX")
+                .withKey('X', ingredient)
+                .withResult(result, 6);
+    }
+
+    public ShapedRecipeBuilder withStandardStairsRecipe(RecipeIngredient ingredient, IItemProvider result) {
+        return this.withPatternLine("X  ")
+                .withPatternLine("XX ")
+                .withPatternLine("XXX")
+                .withKey('X', ingredient)
+                .withResult(result, 4);
     }
 
     // endregion

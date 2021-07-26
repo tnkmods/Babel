@@ -1,6 +1,7 @@
 package com.thenatekirby.babel.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,5 +14,15 @@ public class InventoryUtil {
         }
 
         return Minecraft.getInstance().player.inventory.getItemStack();
+    }
+
+    public static boolean addToPlayerInventory(PlayerEntity entity, ItemStack itemStack) {
+        return entity.inventory.addItemStackToInventory(itemStack);
+    }
+
+    public static void addToPlayerInventoryOrDrop(PlayerEntity entity, ItemStack itemStack) {
+        if (!addToPlayerInventory(entity, itemStack)) {
+            entity.dropItem(itemStack, true);
+        }
     }
 }

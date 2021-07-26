@@ -1,5 +1,6 @@
 package com.thenatekirby.babel.core.slots;
 
+import com.thenatekirby.babel.gui.GuiView;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
@@ -7,6 +8,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class BabelSlot extends Slot {
     private static IInventory EMPTY_INVENTORY = new Inventory(0);
@@ -22,13 +24,17 @@ public class BabelSlot extends Slot {
         return inventory;
     }
 
+    @Nullable
+    public GuiView getHintView() {
+        return inventory.getHintView();
+    }
+
     // ====---------------------------------------------------------------------------====
     // Interaction
 
     @Nonnull
     private ItemStack insertItem(@Nonnull ItemStack stack, boolean simulate) {
-        ItemStack results = inventory.insertItem(0, stack, simulate);
-        return results;
+        return inventory.insertItem(0, stack, simulate);
     }
 
     @Override
@@ -58,4 +64,19 @@ public class BabelSlot extends Slot {
         return inventory.extractItem(0, count, false);
     }
 
+    @Override
+    public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
+        return super.onTake(thePlayer, stack);
+    }
+
+    @Override
+    public void onSlotChanged() {
+        super.onSlotChanged();
+        inventory.onSlotChanged();
+    }
+
+    @Override
+    public int getItemStackLimit(ItemStack stack) {
+        return inventory.getSlotLimit(0);
+    }
 }

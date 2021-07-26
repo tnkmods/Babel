@@ -1,10 +1,17 @@
 package com.thenatekirby.babel.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
@@ -29,6 +36,7 @@ public class RenderUtil {
 
     public static void renderItemIntoGuiScaled(IItemProvider itemProvider, MatrixStack matrixStack, int xPos, int yPos, int scale) {
         ItemRenderer itemRenderer = getItemRenderer();
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
 
         matrixStack.push();
         RenderSystem.enableDepthTest();
@@ -45,6 +53,8 @@ public class RenderUtil {
         RenderHelper.disableStandardItemLighting();
         RenderSystem.disableDepthTest();
         matrixStack.pop();
+
+
     }
 
     // ====---------------------------------------------------------------------------====

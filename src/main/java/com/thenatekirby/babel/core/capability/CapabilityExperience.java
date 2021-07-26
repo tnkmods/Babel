@@ -27,7 +27,7 @@ public class CapabilityExperience {
 
             @Override
             public void readNBT(Capability<IExperienceStorage> capability, IExperienceStorage instance, Direction side, INBT nbt) {
-                ((ExperienceStorage) instance).setExperience(((IntNBT) nbt).getInt());
+                ((ExperienceStorage) instance).setExperienceTotal(((IntNBT) nbt).getInt());
             }
         }, () -> new ExperienceStorage(1000, 0, 0, 0));
     }

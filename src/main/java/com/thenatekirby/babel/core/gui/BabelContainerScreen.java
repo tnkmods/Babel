@@ -1,22 +1,30 @@
 package com.thenatekirby.babel.core.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.thenatekirby.babel.Babel;
+import com.thenatekirby.babel.api.IBackgroundGuiView;
+import com.thenatekirby.babel.api.IClickableGuiView;
 import com.thenatekirby.babel.core.container.BabelContainer;
 import com.thenatekirby.babel.core.slots.BabelSlot;
-import com.thenatekirby.babel.gui.SlotGuiWidget;
+import com.thenatekirby.babel.gui.GuiView;
+import com.thenatekirby.babel.gui.core.ClickContext;
+import com.thenatekirby.babel.gui.core.ViewBuilder;
+import com.thenatekirby.babel.gui.slot.GuiSlot;
 import com.thenatekirby.babel.mod.BabelTextureLocations;
-import com.thenatekirby.babel.util.InventoryUtil;
 import com.thenatekirby.babel.util.RenderUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.client.gui.GuiUtils;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,25 +33,43 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
         super(screenContainer, inv, titleIn);
     }
 
+    private List<Rectangle2d> extraBounds = new ArrayList<>();
+    private List<GuiView> subviews = new ArrayList<>();
+    private GuiRenderer renderer;
+
+    private int pointX = 0;
+    private int pointY = 0;
+    private boolean leftShift = false;
+    private boolean rightShift = false;
+
     @Override
     protected void init() {
         super.init();
 
-        GuiRenderer guiRenderer = new GuiRenderer(this);
-        ResourceLocation backgroundResourceLocation = getBackgroundResourceLocation();
+        this.renderer = new GuiRenderer(this);
+        ViewBuilder builder = new ViewBuilder(renderer, subviews);
 
-        initGuiWidgets(guiRenderer, backgroundResourceLocation);
+        initScreen(builder);
+        this.subviews.forEach(view -> view.setRenderer(renderer));
 
-        List<Widget> widgets = container.inventorySlots
-                .stream()
-                .filter(slot -> slot instanceof BabelSlot)
-                .map(slot -> new SlotGuiWidget(SlotGuiWidget.SlotType.DEFAULT, backgroundResourceLocation, guiRenderer, slot.xPos, slot.yPos))
-                .collect(Collectors.toList());
+        for (GuiView view : this.subviews) {
+            Rectangle2d extraBounds = view.getExtraBounds();
+            if (extraBounds != null) {
+                this.extraBounds.add(extraBounds);
+            }
+        }
 
-        addWidgets(widgets);
+        this.buttons.addAll(
+                container.inventorySlots
+                        .stream()
+                        .filter(slot -> slot instanceof BabelSlot)
+                        .map(slot -> new GuiSlot(slot.xPos, slot.yPos, GuiSlot.SlotType.DEFAULT, ((BabelSlot) slot).getHintView()))
+                        .map(guiSlot -> guiSlot.setRenderer(renderer))
+                        .collect(Collectors.toList())
+        );
     }
 
-    public void initGuiWidgets(@Nonnull GuiRenderer renderer, @Nonnull ResourceLocation backgroundResourceLocation) {
+    public void initScreen(ViewBuilder builder) {
     }
 
     // ====---------------------------------------------------------------------------====
@@ -57,20 +83,28 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
         return BabelTextureLocations.GUI.GUI_BLANK;
     }
 
+    public List<Rectangle2d> getExtraBounds() {
+        return extraBounds;
+    }
+
     // endregion
     // ====---------------------------------------------------------------------------====
     // region Helpers
 
-    public void addWidgets(Widget... widgets) {
-        for (Widget widget : widgets) {
-            addButton(widget);
+    @Nullable
+    protected GuiView getClosestSubviewToMouse() {
+        if (subviews.isEmpty()) {
+            return null;
         }
-    }
 
-    public void addWidgets(List<Widget> widgets) {
-        for (Widget widget : widgets) {
-            addButton(widget);
+        for (int idx = subviews.size(); idx > 0; idx--) {
+            GuiView subview = subviews.get(idx - 1);
+            if (subview.isMouseOver(pointX, pointY)) {
+                return subview;
+            }
         }
+
+        return null;
     }
 
     // endregion
@@ -81,15 +115,17 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         matrixStack.push();
 
+        this.pointX = mouseX - getGuiLeft();
+        this.pointY = mouseY - getGuiTop();
+
         renderBackground(matrixStack);
+
         super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.subviews.forEach(subview -> subview.render(matrixStack, mouseX, mouseY, partialTicks));
+
+
         renderHoveredTooltip(matrixStack, mouseX, mouseY);
-
-        ItemStack mouseHeldItemStack = InventoryUtil.getPlayerMouseHeldItemStack();
-        if (mouseHeldItemStack.isEmpty()) {
-
-        }
-
+        drawTooltips(matrixStack);
         matrixStack.pop();
     }
 
@@ -97,7 +133,8 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
     protected void drawGuiContainerForegroundLayer(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY) {
         RenderUtil.resetColor();
 
-        this.drawCenteredTitleText(matrixStack, RenderUtil.getDefaultTextColor());
+        this.drawTitleTextAt(matrixStack, 8.0F, 8.0F);
+//        this.drawCenteredTitleText(matrixStack, RenderUtil.getDefaultTextColor());
         this.drawInventoryTextAt(matrixStack,8.0F, (float)(this.ySize - 96 + 2), RenderUtil.getDefaultTextColor());
 
         for (Widget widget : this.buttons) {
@@ -119,6 +156,62 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
         int relY = (this.height - this.ySize) / 2;
 
         this.blit(matrixStack, relX, relY, 0, 0, this.xSize, this.ySize);
+
+        for (GuiView view : subviews) {
+            if (view instanceof IBackgroundGuiView) {
+                view.renderBg(matrixStack, mouseX, mouseY, partialTicks);
+            }
+        }
+    }
+
+    protected void drawTooltips(@Nonnull MatrixStack matrixStack) {
+        GuiView targetView = getClosestSubviewToMouse();
+        if (targetView != null) {
+            List<ITextComponent> tooltips = new ArrayList<>();
+            targetView.addTooltips(tooltips);
+
+            GuiUtils.drawHoveringText(matrixStack, tooltips, pointX + guiLeft, pointY + guiTop, width, height, -1, font);
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        //super.mouseClicked(mouseX, mouseY, button);
+
+        GuiView targetView = getClosestSubviewToMouse();
+        if (targetView instanceof IClickableGuiView) {
+            boolean shifting = leftShift || rightShift;
+            ClickContext context = new ClickContext(mouseX, mouseY, button, shifting);
+            return targetView.handleClick(context);
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT) {
+            leftShift = true;
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+            rightShift = true;
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT) {
+            leftShift = false;
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+            rightShift = false;
+        }
+
+        return false;
     }
 
     // endregion
@@ -147,4 +240,5 @@ public class BabelContainerScreen<T extends BabelContainer> extends ContainerScr
     }
 
     // endregion
+
 }
