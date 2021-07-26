@@ -1,7 +1,6 @@
 package com.thenatekirby.babel.core.container;
 
 import com.thenatekirby.babel.Babel;
-import com.thenatekirby.babel.api.IProgress;
 import com.thenatekirby.babel.api.ISyncable;
 import com.thenatekirby.babel.core.BabelConstants;
 import com.thenatekirby.babel.core.inventory.ContainerInventory;
@@ -80,7 +79,7 @@ public class BabelContainer extends Container {
     }
 
     protected List<IContainerListener> getContainerListeners() {
-        return ((ContainerMixin) this).getListeners();
+        return ((ContainerMixin) this).getContainerListeners();
     }
 
     protected List<ISyncable> getSyncables() {
