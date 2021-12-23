@@ -45,6 +45,7 @@ public class RegistrationUtil {
         newBlock.overrideStateContainer(oldBlock.getStateDefinition());
         newBlock.overrideDefaultState(oldBlock.defaultBlockState());
 
+        // TODO: FIXME
         ((StateContainerMixin<Block>) newBlock.getStateDefinition()).setOwner(newBlock);
         newBlock.getStateDefinition().getPossibleStates().forEach(blockState -> ((StateHolderMixin) blockState).setInstance(newBlock));
     }

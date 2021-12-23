@@ -5,23 +5,19 @@ import com.thenatekirby.babel.mod.BabelPackets;
 import com.thenatekirby.babel.mod.BabelSerializers;
 import com.thenatekirby.babel.core.MutableResourceLocation;
 import com.thenatekirby.babel.network.NetworkManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import com.thenatekirby.babel.registration.BabelMod;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 
 // ====---------------------------------------------------------------------------====
 
 @Mod("babel")
-public class Babel {
+public class Babel extends BabelMod {
     private static final Logger LOGGER = LogManager.getLogger();
     public static Logger getLogger() {
         return LOGGER;
@@ -32,19 +28,21 @@ public class Babel {
     public static NetworkManager NETWORK = new NetworkManager(Babel.MOD.withPath("channel"));
 
     public Babel() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
-        MinecraftForge.EVENT_BUS.register(this);
+        setLifecycleAdapter(new ILifecycleAdapter() {
+            @Override
+            public void onSetupRegistries(BabelRegistryBuilder builder) {
+                builder.addRecipeSerializers(BabelSerializers.RECIPE_SERIALIZERS);
+            }
 
-        BabelSerializers.register();
-    }
+            @Override
+            public void onRegisterCapabilities() {
+                CapabilityExperience.register();
+            }
 
-    private void onClientSetup(final FMLClientSetupEvent event) {
-    }
-
-    private void onCommonSetup(final FMLCommonSetupEvent event) {
-        CapabilityExperience.register();
-
-        BabelPackets.registerMessages();
+            @Override
+            public void onRegisterPackets() {
+                BabelPackets.registerMessages();
+            }
+        });
     }
 }
