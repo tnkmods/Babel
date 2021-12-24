@@ -3,6 +3,8 @@ package com.thenatekirby.babel.util;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+// ====---------------------------------------------------------------------------====
+
 public class StringFormatting {
     public static String formatNumber(long number) {
         return NumberFormat.getInstance().format(number);

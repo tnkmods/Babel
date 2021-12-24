@@ -2,6 +2,8 @@ package com.thenatekirby.babel.integration;
 
 import com.thenatekirby.babel.core.MutableResourceLocation;
 
+// ====---------------------------------------------------------------------------====
+
 public class Mods {
     public static final MutableResourceLocation MINECRAFT = new MutableResourceLocation("minecraft");
     public static final MutableResourceLocation FORGE = new MutableResourceLocation("forge");

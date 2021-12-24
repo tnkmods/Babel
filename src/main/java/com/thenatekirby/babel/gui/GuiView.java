@@ -1,27 +1,29 @@
 package com.thenatekirby.babel.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.thenatekirby.babel.api.IGuiRenderer;
-import com.thenatekirby.babel.core.gui.GuiRenderer;
-import com.thenatekirby.babel.gui.core.ClickContext;
-import com.thenatekirby.babel.gui.core.Frame;
-import com.thenatekirby.babel.mod.BabelTextureLocations;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.thenatekirby.babel.babelmod.BabelTextureLocations;
+import com.thenatekirby.babel.core.api.IGuiRenderer;
+import com.thenatekirby.babel.core.gui.ClickContext;
+import com.thenatekirby.babel.core.gui.Frame;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
 
-public class GuiView extends Widget {
-    public static final ITextComponent NO_MESSAGE_COMPONENT = new StringTextComponent("");
+// ====---------------------------------------------------------------------------====
+
+public class GuiView extends AbstractWidget {
+    public static final Component NO_MESSAGE_COMPONENT = new TextComponent("");
 
     public static final int MOUSE_BUTTON_LEFT = 0;
     public static final int MOUSE_BUTTON_RIGHT = 1;
@@ -86,7 +88,7 @@ public class GuiView extends Widget {
     }
 
     @Nullable
-    public Rectangle2d getExtraBounds() {
+    public Rect2i getExtraBounds() {
         return null;
     }
 
@@ -116,20 +118,20 @@ public class GuiView extends Widget {
     // region Lifecycle
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderer.bindTexture(getTextureLocation());
         drawFrame(frame, matrixStack, renderer, mouseX, mouseY, partialTicks);
     }
 
-    public void renderBg(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderBg(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderer.bindTexture(getTextureLocation());
         drawBgFrame(frame, matrixStack, renderer, mouseX, mouseY, partialTicks);
     }
 
-    protected void drawFrame(Frame frame, MatrixStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
+    protected void drawFrame(Frame frame, PoseStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
     }
 
-    protected void drawBgFrame(Frame frame, MatrixStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
+    protected void drawBgFrame(Frame frame, PoseStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
     }
 
     protected boolean onRightClick(@Nonnull ClickContext context) {
@@ -148,20 +150,27 @@ public class GuiView extends Widget {
         }
     }
 
-    public void addTooltips(List<ITextComponent> tooltips) {
-
+    public void addTooltips(List<Component> tooltips) {
     }
 
     // endregion
     // ====---------------------------------------------------------------------------====
     // region Rendering
 
-    public void drawTexturedRect(@Nonnull MatrixStack matrixStack, Frame frame, int textureX, int textureY) {
+    public void drawTexturedRect(@Nonnull PoseStack matrixStack, Frame frame, int textureX, int textureY) {
         blit(matrixStack, frame.x, frame.y, textureX, textureY, frame.width, frame.height);
     }
 
-    public void drawTexturedRect(@Nonnull MatrixStack matrixStack, int x, int y, int textureX, int textureY, int width, int height) {
+    public void drawTexturedRect(@Nonnull PoseStack matrixStack, int x, int y, int textureX, int textureY, int width, int height) {
         blit(matrixStack, x, y, textureX, textureY, width, height);
+    }
+
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region Narration
+
+    @Override
+    public void updateNarration(@Nonnull NarrationElementOutput output) {
     }
 
     // endregion
@@ -169,7 +178,7 @@ public class GuiView extends Widget {
     // region Helpers
 
     protected void playButtonClick() {
-        Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     // endregion

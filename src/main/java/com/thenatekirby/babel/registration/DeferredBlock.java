@@ -1,12 +1,12 @@
 package com.thenatekirby.babel.registration;
 
-import com.thenatekirby.babel.api.IBlockProvider;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.util.IItemProvider;
-import net.minecraftforge.fml.RegistryObject;
+import com.thenatekirby.babel.core.api.IBlockProvider;
+import com.thenatekirby.babel.core.api.IItemProvider;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public class DeferredBlock<T extends Block> implements IItemProvider, IBlockProv
     }
 
     // ====---------------------------------------------------------------------------====
-    // Getters
+    // region Getters
 
     public String getName() {
         return name;
@@ -56,4 +56,6 @@ public class DeferredBlock<T extends Block> implements IItemProvider, IBlockProv
     public Item asItem() {
         return item.get();
     }
+
+    // endregion
 }

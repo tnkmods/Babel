@@ -1,11 +1,13 @@
 package com.thenatekirby.babel.recipe.manager;
 
-import com.thenatekirby.babel.recipe.collection.IRecipeCollection;
-import net.minecraft.item.crafting.RecipeManager;
+import com.thenatekirby.babel.core.api.IRecipeCollection;
+import net.minecraft.world.item.crafting.RecipeManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+
+// ====---------------------------------------------------------------------------====
 
 public class RecipeCollectionManager {
     private static final RecipeCollectionManager INSTANCE = new RecipeCollectionManager();

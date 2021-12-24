@@ -1,16 +1,18 @@
 package com.thenatekirby.babel.datagen;
 
-import com.thenatekirby.babel.api.IBlockProvider;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.block.WallBlock;
+import com.thenatekirby.babel.core.api.IBlockProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class BabelBlockStateProvider extends BlockStateProvider {
     public static final String BLOCK_FOLDER = ModelProvider.BLOCK_FOLDER;
@@ -107,7 +109,7 @@ public class BabelBlockStateProvider extends BlockStateProvider {
             ModelFile stairs = models().stairs(name, textureLoc, textureLoc, textureLoc);
             ModelFile stairsInner = models().stairsInner(name + "_inner", textureLoc, textureLoc, textureLoc);
             ModelFile stairsOuter = models().stairsOuter(name + "_outer", textureLoc, textureLoc, textureLoc);
-            stairsBlock((StairsBlock) blockProvider.asBlock(), stairs, stairsInner, stairsOuter);
+            stairsBlock((StairBlock) blockProvider.asBlock(), stairs, stairsInner, stairsOuter);
         }
 
         // endregion

@@ -1,8 +1,8 @@
 package com.thenatekirby.babel.gui.slot;
 
-import com.thenatekirby.babel.gui.core.GuiTextureView;
+import com.thenatekirby.babel.gui.views.GuiTextureView;
 
-import com.thenatekirby.babel.gui.core.GuiTextureView.IGuiTexture;
+// ====---------------------------------------------------------------------------====
 
 public class GuiSlotTexture extends GuiTextureView {
     private static final IGuiTexture TEXTURE = new IGuiTexture() {

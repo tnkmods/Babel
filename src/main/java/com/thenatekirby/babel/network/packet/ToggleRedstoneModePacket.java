@@ -1,19 +1,19 @@
 package com.thenatekirby.babel.network.packet;
 
-import com.thenatekirby.babel.api.IPacketHandler;
-import com.thenatekirby.babel.core.tileentity.WorkingTileEntity;
-import com.thenatekirby.babel.mod.BabelPackets;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.NetworkEvent;
+import com.thenatekirby.babel.core.api.IPacketHandler;
+import com.thenatekirby.babel.machine.entity.WorkingBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ToggleRedstoneModePacket extends BabelPacket {
+// ====---------------------------------------------------------------------------====
+
+public class ToggleRedstoneModePacket {
     private BlockPos blockPos;
     private boolean forward;
 
@@ -26,13 +26,13 @@ public class ToggleRedstoneModePacket extends BabelPacket {
         public static final Handler INSTANCE = new Handler();
 
         @Override
-        public void encode(ToggleRedstoneModePacket packet, PacketBuffer buffer) {
+        public void encode(ToggleRedstoneModePacket packet, FriendlyByteBuf buffer) {
             buffer.writeBlockPos(packet.blockPos);
             buffer.writeBoolean(packet.forward);
         }
 
         @Override
-        public ToggleRedstoneModePacket decode(PacketBuffer buffer) {
+        public ToggleRedstoneModePacket decode(FriendlyByteBuf buffer) {
             return new ToggleRedstoneModePacket(buffer.readBlockPos(), buffer.readBoolean());
         }
 
@@ -40,12 +40,12 @@ public class ToggleRedstoneModePacket extends BabelPacket {
         public void handle(ToggleRedstoneModePacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
             NetworkEvent.Context context = contextSupplier.get();
             context.enqueueWork(() -> {
-                ServerPlayerEntity entity = context.getSender();
+                ServerPlayer entity = context.getSender();
                 if (entity != null) {
-                    World world = entity.level;
-                    TileEntity tileEntity = world.getBlockEntity(packet.blockPos);
-                    if (tileEntity instanceof WorkingTileEntity) {
-                        ((WorkingTileEntity) tileEntity).toggleRedstoneMode(packet.forward);
+                    Level level = entity.level;
+                    BlockEntity blockEntity = level.getBlockEntity(packet.blockPos);
+                    if (blockEntity instanceof WorkingBlockEntity) {
+                        ((WorkingBlockEntity) blockEntity).toggleRedstoneMode(packet.forward);
                     }
                 }
             });

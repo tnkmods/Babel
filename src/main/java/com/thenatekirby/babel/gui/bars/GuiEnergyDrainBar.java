@@ -1,11 +1,11 @@
 package com.thenatekirby.babel.gui.bars;
 
-import com.thenatekirby.babel.api.IProgress;
-import com.thenatekirby.babel.core.ConstantProgress;
+import com.thenatekirby.babel.core.progress.ConstantProgress;
+import com.thenatekirby.babel.core.progress.IProgress;
 
 import javax.annotation.Nullable;
 
-import com.thenatekirby.babel.gui.bars.GuiVerticalBar.IVerticalBarType;
+// ====---------------------------------------------------------------------------====
 
 public class GuiEnergyDrainBar extends GuiVerticalBar {
     private static final IVerticalBarType BAR_TYPE = new IVerticalBarType() {

@@ -1,11 +1,13 @@
 package com.thenatekirby.babel.network.sync;
 
-import com.thenatekirby.babel.api.IEnergyStatsProvider;
-import com.thenatekirby.babel.api.ISyncable;
-import com.thenatekirby.babel.core.energy.EnergyStats;
-import net.minecraft.network.PacketBuffer;
+import com.thenatekirby.babel.core.api.IEnergyStatsProvider;
+import com.thenatekirby.babel.core.api.ISyncable;
+import com.thenatekirby.babel.machine.config.EnergyStats;
+import net.minecraft.network.FriendlyByteBuf;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class SyncableEnergyStats implements IEnergyStatsProvider, ISyncable {
     private final EnergyStats energyStats;
@@ -25,7 +27,7 @@ public class SyncableEnergyStats implements IEnergyStatsProvider, ISyncable {
     }
 
     @Override
-    public void write(@Nonnull PacketBuffer packetBuffer) {
+    public void write(@Nonnull FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(energyStats.getAccepts());
         packetBuffer.writeInt(energyStats.getConsumes());
         packetBuffer.writeFloat(energyStats.getSpeed());
@@ -33,7 +35,7 @@ public class SyncableEnergyStats implements IEnergyStatsProvider, ISyncable {
     }
 
     @Override
-    public void read(@Nonnull PacketBuffer packetBuffer) {
+    public void read(@Nonnull FriendlyByteBuf packetBuffer) {
         energyStats.setAccepts(packetBuffer.readInt());
         energyStats.setConsumes(packetBuffer.readInt());
         energyStats.setSpeed(packetBuffer.readFloat());

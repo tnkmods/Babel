@@ -2,17 +2,17 @@ package com.thenatekirby.babel.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.thenatekirby.babel.mod.BabelSerializers;
-import com.thenatekirby.babel.core.RecipeIngredient;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapelessRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import com.thenatekirby.babel.babelmod.BabelSerializers;
+import com.thenatekirby.babel.recipe.components.RecipeIngredient;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -44,31 +44,31 @@ public class TaggedShapelessCraftingRecipe extends ShapelessRecipe {
 
     @Override
     @Nonnull
-    public ItemStack assemble(CraftingInventory inv) {
+    public ItemStack assemble(CraftingContainer inv) {
         return getResultItem().copy();
     }
 
     @Override
     @Nonnull
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return BabelSerializers.TAGGED_SHAPELESS.getAsRecipeSerializer();
     }
 
     // ====---------------------------------------------------------------------------====
     // region Serializer
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<TaggedShapelessCraftingRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<TaggedShapelessCraftingRecipe> {
         @Override
         @Nonnull
         public TaggedShapelessCraftingRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
-            String group = JSONUtils.getAsString(json, "group", "");
-            NonNullList<Ingredient> ingredients = readIngredients(JSONUtils.getAsJsonArray(json, "ingredients"));
+            String group = GsonHelper.getAsString(json, "group", "");
+            NonNullList<Ingredient> ingredients = readIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
 
-            JsonObject resultJson = JSONUtils.getAsJsonObject(json, "result");
+            JsonObject resultJson = GsonHelper.getAsJsonObject(json, "result");
             if (resultJson.has("tag")) {
-                return new TaggedShapelessCraftingRecipe(recipeId, group, RecipeIngredient.fromTag(JSONUtils.getAsString(resultJson, "tag")), ingredients);
+                return new TaggedShapelessCraftingRecipe(recipeId, group, RecipeIngredient.fromTag(GsonHelper.getAsString(resultJson, "tag")), ingredients);
             } else {
-                return new TaggedShapelessCraftingRecipe(recipeId, group, RecipeIngredient.fromItem(JSONUtils.getAsString(resultJson, "item")), ingredients);
+                return new TaggedShapelessCraftingRecipe(recipeId, group, RecipeIngredient.fromItem(GsonHelper.getAsString(resultJson, "item")), ingredients);
             }
         }
 
@@ -87,7 +87,7 @@ public class TaggedShapelessCraftingRecipe extends ShapelessRecipe {
 
         @Nullable
         @Override
-        public TaggedShapelessCraftingRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
+        public TaggedShapelessCraftingRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull FriendlyByteBuf buffer) {
             String group = buffer.readUtf(32767);
             int size = buffer.readVarInt();
 
@@ -102,7 +102,7 @@ public class TaggedShapelessCraftingRecipe extends ShapelessRecipe {
         }
 
         @Override
-        public void toNetwork(@Nonnull PacketBuffer buffer, @Nonnull TaggedShapelessCraftingRecipe recipe) {
+        public void toNetwork(@Nonnull FriendlyByteBuf buffer, @Nonnull TaggedShapelessCraftingRecipe recipe) {
             buffer.writeUtf(recipe.getGroup());
             buffer.writeVarInt(recipe.getIngredients().size());
 

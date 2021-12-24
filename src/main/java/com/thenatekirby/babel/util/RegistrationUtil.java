@@ -1,14 +1,11 @@
 package com.thenatekirby.babel.util;
 
 import com.thenatekirby.babel.Babel;
-import com.thenatekirby.babel.api.IBlockReplacement;
-import com.thenatekirby.babel.mixin.StateHolderMixin;
-import com.thenatekirby.babel.mixin.StateContainerMixin;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.IBlockReader;
+import com.thenatekirby.babel.core.api.IBlockReplacement;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -16,11 +13,6 @@ import java.util.Objects;
 
 // ====---------------------------------------------------------------------------====
 
-/**
- * Helper methods for registration not covered elsewhere.
- */
-
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class RegistrationUtil {
     public static boolean overrideExistingBlock(@Nonnull Block block, String modId) {
         Block existing = ForgeRegistries.BLOCKS.getValue(block.getRegistryName());
@@ -45,8 +37,8 @@ public class RegistrationUtil {
         newBlock.overrideStateContainer(oldBlock.getStateDefinition());
         newBlock.overrideDefaultState(oldBlock.defaultBlockState());
 
-        // TODO: FIXME
-        ((StateContainerMixin<Block>) newBlock.getStateDefinition()).setOwner(newBlock);
-        newBlock.getStateDefinition().getPossibleStates().forEach(blockState -> ((StateHolderMixin) blockState).setInstance(newBlock));
+        // TODO: Re-enable state container mixin
+//        ((StateContainerMixin<Block>) newBlock.getStateDefinition()).setOwner(newBlock);
+//        newBlock.getStateDefinition().getPossibleStates().forEach(blockState -> ((StateHolderMixin) blockState).setInstance(newBlock));
     }
 }

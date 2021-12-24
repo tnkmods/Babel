@@ -1,39 +1,42 @@
 package com.thenatekirby.babel.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
+// ====---------------------------------------------------------------------------====
+
 public class TagUtil {
     public static boolean doesItemTagExist(@Nonnull ResourceLocation id) {
-        ITag<Item> itemTag = ItemTags.getAllTags().getTag(id);
+        Tag<Item> itemTag = ItemTags.getAllTags().getTag(id);
         return (itemTag != null);
     }
 
     public static boolean doesBlockTagExist(@Nonnull ResourceLocation id) {
-        ITag<Block> blockTag = BlockTags.getAllTags().getTag(id);
+        Tag<Block> blockTag = BlockTags.getAllTags().getTag(id);
         return (blockTag != null);
     }
 
     @Nullable
-    public static ITag<Item> getItemTag(@Nonnull ResourceLocation id) {
+    public static Tag<Item> getItemTag(@Nonnull ResourceLocation id) {
         return ItemTags.getAllTags().getTag(id);
     }
 
+    @Nonnull
     public static ItemStack firstItemInTag(@Nonnull ResourceLocation id) {
         return firstItemInTag(id, 1);
     }
 
+    @Nonnull
     public static ItemStack firstItemInTag(@Nonnull ResourceLocation id, int count) {
-        ITag<Item> itemTag = ItemTags.getAllTags().getTag(id);
+        Tag<Item> itemTag = ItemTags.getAllTags().getTag(id);
         if (itemTag == null || itemTag.getValues().isEmpty()) {
             return ItemStack.EMPTY;
         }

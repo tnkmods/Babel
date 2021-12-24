@@ -1,16 +1,16 @@
 package com.thenatekirby.babel.recipe;
 
 import com.google.gson.JsonObject;
-import com.thenatekirby.babel.mod.BabelSerializers;
-import com.thenatekirby.babel.core.RecipeIngredient;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import com.thenatekirby.babel.babelmod.BabelSerializers;
+import com.thenatekirby.babel.recipe.components.RecipeIngredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * the first available tagged item.
  */
 
-public class TaggedSmeltingRecipe extends FurnaceRecipe {
+public class TaggedSmeltingRecipe extends SmeltingRecipe {
     public static String RECIPE_TYPE_NAME = "smelting";
     private RecipeIngredient result;
 
@@ -35,13 +35,13 @@ public class TaggedSmeltingRecipe extends FurnaceRecipe {
 
     @Override
     @Nonnull
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return BabelSerializers.TAGGED_SMELTING.getAsRecipeSerializer();
     }
 
     @Override
     @Nonnull
-    public ItemStack assemble(IInventory inv) {
+    public ItemStack assemble(@Nonnull Container inv) {
         return getResultItem();
     }
 
@@ -54,27 +54,27 @@ public class TaggedSmeltingRecipe extends FurnaceRecipe {
     // ====---------------------------------------------------------------------------====
     // region Serializer
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<TaggedSmeltingRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<TaggedSmeltingRecipe> {
         @Override
         @Nonnull
         public TaggedSmeltingRecipe fromJson(@Nonnull ResourceLocation recipeId, @Nonnull JsonObject json) {
-            String group = JSONUtils.getAsString(json, "group", "");
-            Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "ingredient"));
+            String group = GsonHelper.getAsString(json, "group", "");
+            Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
 
-            int experience = JSONUtils.getAsInt(json, "experience");
-            int cookingTime = JSONUtils.getAsInt(json, "cookingtime");
+            int experience = GsonHelper.getAsInt(json, "experience");
+            int cookingTime = GsonHelper.getAsInt(json, "cookingtime");
 
-            JsonObject resultJson = JSONUtils.getAsJsonObject(json, "result");
+            JsonObject resultJson = GsonHelper.getAsJsonObject(json, "result");
             if (resultJson.has("tag")) {
-                return new TaggedSmeltingRecipe(recipeId, group, input, RecipeIngredient.fromTag(JSONUtils.getAsString(resultJson, "tag")), experience, cookingTime);
+                return new TaggedSmeltingRecipe(recipeId, group, input, RecipeIngredient.fromTag(GsonHelper.getAsString(resultJson, "tag")), experience, cookingTime);
             } else {
-                return new TaggedSmeltingRecipe(recipeId, group, input, RecipeIngredient.fromItem(JSONUtils.getAsString(resultJson, "item")), experience, cookingTime);
+                return new TaggedSmeltingRecipe(recipeId, group, input, RecipeIngredient.fromItem(GsonHelper.getAsString(resultJson, "item")), experience, cookingTime);
             }
         }
 
-        @Nullable
         @Override
-        public TaggedSmeltingRecipe fromNetwork(@Nonnull ResourceLocation recipeId, @Nonnull PacketBuffer buffer) {
+        @Nullable
+        public TaggedSmeltingRecipe fromNetwork(@Nonnull ResourceLocation recipeId, FriendlyByteBuf buffer) {
             String group = buffer.readUtf();
             Ingredient input = Ingredient.fromNetwork(buffer);
             RecipeIngredient result = RecipeIngredient.read(buffer);
@@ -84,7 +84,7 @@ public class TaggedSmeltingRecipe extends FurnaceRecipe {
         }
 
         @Override
-        public void toNetwork(@Nonnull PacketBuffer buffer, @Nonnull TaggedSmeltingRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buffer, TaggedSmeltingRecipe recipe) {
             buffer.writeUtf(recipe.group);
             recipe.ingredient.toNetwork(buffer);
             recipe.result.write(buffer);

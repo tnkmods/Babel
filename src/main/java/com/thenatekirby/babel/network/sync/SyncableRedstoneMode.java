@@ -1,11 +1,13 @@
 package com.thenatekirby.babel.network.sync;
 
-import com.thenatekirby.babel.api.IRedstoneModeProvider;
-import com.thenatekirby.babel.api.ISyncable;
-import com.thenatekirby.babel.core.RedstoneMode;
-import net.minecraft.network.PacketBuffer;
+import com.thenatekirby.babel.core.api.IRedstoneModeProvider;
+import com.thenatekirby.babel.core.api.ISyncable;
+import com.thenatekirby.babel.machine.config.RedstoneMode;
+import net.minecraft.network.FriendlyByteBuf;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class SyncableRedstoneMode implements ISyncable, IRedstoneModeProvider {
     private RedstoneMode redstoneMode;
@@ -24,12 +26,12 @@ public class SyncableRedstoneMode implements ISyncable, IRedstoneModeProvider {
     }
 
     @Override
-    public void write(@Nonnull PacketBuffer packetBuffer) {
+    public void write(@Nonnull FriendlyByteBuf packetBuffer) {
         redstoneMode.write(packetBuffer);
     }
 
     @Override
-    public void read(@Nonnull PacketBuffer packetBuffer) {
+    public void read(@Nonnull FriendlyByteBuf packetBuffer) {
         this.redstoneMode.read(packetBuffer);
     }
 }

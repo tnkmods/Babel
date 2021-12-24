@@ -2,11 +2,11 @@ package com.thenatekirby.babel.core;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,12 +44,12 @@ public class ChanceItemStack {
     // ====---------------------------------------------------------------------------====
     // region Serialization
 
-    public void write(@Nonnull PacketBuffer buffer) {
+    public void write(@Nonnull FriendlyByteBuf buffer) {
         buffer.writeItem(itemStack);
         buffer.writeFloat(chance);
     }
 
-    public static ChanceItemStack read(@Nonnull PacketBuffer buffer) {
+    public static ChanceItemStack read(@Nonnull FriendlyByteBuf buffer) {
         ItemStack itemStack = buffer.readItem();
         float chance = buffer.readFloat();
         return new ChanceItemStack(itemStack, chance);
@@ -60,15 +60,15 @@ public class ChanceItemStack {
         ItemStack itemStack;
         float chance;
 
-        if (JSONUtils.isValidNode(json, "item")) {
-            itemStack = ShapedRecipe.itemFromJson(json);
+        if (GsonHelper.isValidNode(json, "item")) {
+            itemStack = ShapedRecipe.itemStackFromJson(json);
 
         } else {
             return null;
         }
 
-        if (JSONUtils.isValidNode(json, "chance")) {
-            chance = JSONUtils.getAsFloat(json, "chance");
+        if (GsonHelper.isValidNode(json, "chance")) {
+            chance = GsonHelper.getAsFloat(json, "chance");
 
         } else {
             chance = 1.0f;
@@ -77,8 +77,8 @@ public class ChanceItemStack {
         return new ChanceItemStack(itemStack, chance);
     }
 
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = itemStack.serializeNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = itemStack.serializeNBT();
         nbt.putFloat("chance", chance);
         return nbt;
     }

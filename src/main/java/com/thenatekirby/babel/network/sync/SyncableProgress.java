@@ -1,12 +1,12 @@
 package com.thenatekirby.babel.network.sync;
 
-import com.thenatekirby.babel.Babel;
-import com.thenatekirby.babel.api.IProgress;
-import com.thenatekirby.babel.api.ISyncable;
-import com.thenatekirby.babel.core.energy.BabelEnergyStorage;
-import net.minecraft.network.PacketBuffer;
+import com.thenatekirby.babel.core.api.ISyncable;
+import com.thenatekirby.babel.core.progress.IProgress;
+import net.minecraft.network.FriendlyByteBuf;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class SyncableProgress implements ISyncable, IProgress {
     private IProgress progress;
@@ -26,14 +26,14 @@ public class SyncableProgress implements ISyncable, IProgress {
     }
 
     @Override
-    public void write(@Nonnull PacketBuffer packetBuffer) {
+    public void write(@Nonnull FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(progress.getProgressMin());
         packetBuffer.writeInt(progress.getProgressMax());
         packetBuffer.writeInt(progress.getProgressCurrent());
     }
 
     @Override
-    public void read(@Nonnull PacketBuffer packetBuffer) {
+    public void read(@Nonnull FriendlyByteBuf packetBuffer) {
         this.min = packetBuffer.readInt();
         this.max = packetBuffer.readInt();
         this.current = packetBuffer.readInt();
@@ -53,5 +53,4 @@ public class SyncableProgress implements ISyncable, IProgress {
     public int getProgressCurrent() {
         return current;
     }
-
 }

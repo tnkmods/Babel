@@ -1,16 +1,16 @@
 package com.thenatekirby.babel.gui.slot;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.thenatekirby.babel.api.IGuiRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.thenatekirby.babel.core.api.IGuiRenderer;
+import com.thenatekirby.babel.core.api.IItemProvider;
+import com.thenatekirby.babel.core.gui.Frame;
 import com.thenatekirby.babel.gui.GuiView;
-import com.thenatekirby.babel.gui.core.Frame;
-import com.thenatekirby.babel.gui.core.GuiTextureView;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class GuiSlotHintView extends GuiView {
     private IItemProvider itemProvider;
@@ -20,10 +20,10 @@ public class GuiSlotHintView extends GuiView {
         this.itemProvider = itemProvider;
     }
 
-    public void renderHintInto(@Nonnull Frame frame, MatrixStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
+    public void renderHintInto(@Nonnull Frame frame, PoseStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
         renderer.bindTexture(getTextureLocation());
 
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        ItemRenderer itemRenderer = renderer.getItemRenderer();
         ItemStack itemStack = new ItemStack(itemProvider);
         itemRenderer.renderAndDecorateFakeItem(itemStack, frame.x, frame.y);
     }

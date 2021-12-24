@@ -1,24 +1,25 @@
 package com.thenatekirby.babel.network.packet;
 
-import com.thenatekirby.babel.api.IPacketHandler;
-import com.thenatekirby.babel.core.container.BabelContainer;
+import com.thenatekirby.babel.core.api.IPacketHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ContainerUpdateGuiPacket extends BabelPacket {
-    private final int windowId;
-    private final PacketBuffer buffer;
+// ====---------------------------------------------------------------------------====
 
-    public ContainerUpdateGuiPacket(int windowId, PacketBuffer buffer) {
+public class ContainerUpdateGuiPacket {
+    private final int windowId;
+    private final FriendlyByteBuf buffer;
+
+    public ContainerUpdateGuiPacket(int windowId, FriendlyByteBuf buffer) {
         this.windowId = windowId;
         this.buffer = buffer;
     }
 
-    public PacketBuffer getBuffer() {
+    public FriendlyByteBuf getBuffer() {
         return buffer;
     }
 
@@ -26,13 +27,13 @@ public class ContainerUpdateGuiPacket extends BabelPacket {
         public static final Handler INSTANCE = new Handler();
 
         @Override
-        public void encode(ContainerUpdateGuiPacket packet, PacketBuffer buffer) {
+        public void encode(ContainerUpdateGuiPacket packet, FriendlyByteBuf buffer) {
             buffer.writeInt(packet.windowId);
             buffer.writeBytes(packet.buffer);
         }
 
         @Override
-        public ContainerUpdateGuiPacket decode(PacketBuffer buffer) {
+        public ContainerUpdateGuiPacket decode(FriendlyByteBuf buffer) {
             int windowId = buffer.readInt();
             return new ContainerUpdateGuiPacket(windowId, buffer);
         }
@@ -42,11 +43,12 @@ public class ContainerUpdateGuiPacket extends BabelPacket {
             NetworkEvent.Context context = contextSupplier.get();
             context.enqueueWork(() -> {
 
-                ClientPlayerEntity playerEntity = Minecraft.getInstance().player;
+                Player playerEntity = Minecraft.getInstance().player;
 
-                if (playerEntity != null && playerEntity.containerMenu instanceof BabelContainer && playerEntity.containerMenu.containerId == packet.windowId) {
-                    ((BabelContainer) playerEntity.containerMenu).receive(packet);
-                }
+                // TODO: BabelContainer
+//                if (playerEntity != null && playerEntity.containerMenu instanceof BabelContainer && playerEntity.containerMenu.containerId == packet.windowId) {
+//                    ((BabelContainer) playerEntity.containerMenu).receive(packet);
+//                }
             });
 
             context.setPacketHandled(true);

@@ -1,16 +1,18 @@
 package com.thenatekirby.babel.recipe;
 
-import com.thenatekirby.babel.core.EmptyInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import com.thenatekirby.babel.core.container.EmptyContainer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
-public class BabelRecipe implements IRecipe<EmptyInventory> {
+// ====---------------------------------------------------------------------------====
+
+public class BabelRecipe implements Recipe<EmptyContainer> {
     private final ResourceLocation recipeId;
 
     public BabelRecipe(@Nonnull ResourceLocation recipeId) {
@@ -24,19 +26,18 @@ public class BabelRecipe implements IRecipe<EmptyInventory> {
         return recipeId;
     }
 
-
     // endregion
     // ====---------------------------------------------------------------------------====
-    // region IRecipe
+    // region Recipe
 
     @Override
-    public boolean matches(@Nonnull EmptyInventory inv, @Nonnull World worldIn) {
+    public boolean matches(@Nonnull EmptyContainer inventory, @Nonnull Level level) {
         return false;
     }
 
     @Override
     @Nonnull
-    public ItemStack assemble(@Nonnull EmptyInventory inv) {
+    public ItemStack assemble(@Nonnull EmptyContainer inv) {
         return ItemStack.EMPTY;
     }
 
@@ -57,14 +58,17 @@ public class BabelRecipe implements IRecipe<EmptyInventory> {
         return recipeId;
     }
 
+    @Nonnull
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return null;
     }
 
+    @Nonnull
     @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return null;
     }
+
     // endregion
 }

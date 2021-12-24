@@ -1,15 +1,17 @@
 package com.thenatekirby.babel.datagen;
 
-import com.thenatekirby.babel.api.IBlockProvider;
+import com.thenatekirby.babel.core.api.IBlockProvider;
+import com.thenatekirby.babel.core.api.IItemProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
+
+// ====---------------------------------------------------------------------------====
 
 public class BabelItemModelProvider extends ItemModelProvider {
     private final String modId;

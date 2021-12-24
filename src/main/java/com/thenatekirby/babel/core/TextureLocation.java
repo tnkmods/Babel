@@ -1,8 +1,10 @@
 package com.thenatekirby.babel.core;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class TextureLocation {
     public enum ResourceType {
