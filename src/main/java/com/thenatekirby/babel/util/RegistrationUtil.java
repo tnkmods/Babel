@@ -2,10 +2,13 @@ package com.thenatekirby.babel.util;
 
 import com.thenatekirby.babel.Babel;
 import com.thenatekirby.babel.core.api.IBlockReplacement;
+import com.thenatekirby.babel.mixin.StateDefinitionMixin;
+import com.thenatekirby.babel.mixin.StateHolderMixin;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -37,8 +40,7 @@ public class RegistrationUtil {
         newBlock.overrideStateContainer(oldBlock.getStateDefinition());
         newBlock.overrideDefaultState(oldBlock.defaultBlockState());
 
-        // TODO: Re-enable state container mixin
-//        ((StateContainerMixin<Block>) newBlock.getStateDefinition()).setOwner(newBlock);
-//        newBlock.getStateDefinition().getPossibleStates().forEach(blockState -> ((StateHolderMixin) blockState).setInstance(newBlock));
+        newBlock.getStateDefinition().owner = newBlock;
+        newBlock.getStateDefinition().getPossibleStates().forEach(blockState -> blockState.owner = newBlock);
     }
 }

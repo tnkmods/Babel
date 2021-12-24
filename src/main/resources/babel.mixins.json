@@ -1,0 +1,11 @@
+{
+  "minVersion": "0.8",
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "babel.refmap.json",
+  "package": "com.thenatekirby.babel.mixin",
+  "mixins": [
+    "StateDefinitionMixin",
+    "StateHolderMixin"
+  ]
+}

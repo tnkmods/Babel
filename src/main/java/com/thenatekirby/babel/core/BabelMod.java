@@ -39,6 +39,8 @@ public class BabelMod {
 
         MinecraftForge.EVENT_BUS.register(this);
 
+        lifecycleAdapter.onRegisterConfig();
+        lifecycleAdapter.onLoadConfig();
         lifecycleAdapter.onSetupRegistries(new RegistryBuilder());
     }
 
