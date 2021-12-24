@@ -5,7 +5,13 @@
   "refmap": "babel.refmap.json",
   "package": "com.thenatekirby.babel.mixin",
   "mixins": [
-    "StateDefinitionMixin",
-    "StateHolderMixin"
+    "AbstractContainerMenuMixin",
+    "EnchantRandomlyFunctionMixin",
+    "LootItemMixin",
+    "LootPoolMixin",
+    "LootPoolSingletonContainerMixin",
+    "LootTableMixin",
+    "SetItemCountFunctionMixin",
+    "SetNbtFunctionMixin"
   ]
 }

@@ -2,13 +2,10 @@ package com.thenatekirby.babel.util;
 
 import com.thenatekirby.babel.Babel;
 import com.thenatekirby.babel.core.api.IBlockReplacement;
-import com.thenatekirby.babel.mixin.StateDefinitionMixin;
-import com.thenatekirby.babel.mixin.StateHolderMixin;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
