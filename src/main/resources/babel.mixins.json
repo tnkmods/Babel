@@ -6,12 +6,14 @@
   "package": "com.thenatekirby.babel.mixin",
   "mixins": [
     "AbstractContainerMenuMixin",
+    "ConstantValueMixin",
     "EnchantRandomlyFunctionMixin",
     "LootItemMixin",
     "LootPoolMixin",
     "LootPoolSingletonContainerMixin",
     "LootTableMixin",
     "SetItemCountFunctionMixin",
-    "SetNbtFunctionMixin"
+    "SetNbtFunctionMixin",
+    "UniformGeneratorMixin"
   ]
 }
