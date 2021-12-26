@@ -19,16 +19,10 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 repositories {
-  maven { url 'https://www.dogforce-games.com/maven/' }
-  maven { // JEI
-    url "https://dvs1.progwml6.com/files/maven"
-  }
-  maven { // Patchouli
-    url "https://maven.blamejared.com"
-  }
-  maven { // TOP
-    url "https://maven.k-4u.nl"
-  }
+    maven { url 'https://www.dogforce-games.com/maven/' }
+    maven { url "https://dvs1.progwml6.com/files/maven" }
+    maven { url "https://maven.blamejared.com" }
+    maven { url "https://maven.k-4u.nl" }
 }
 
 version = mod_version
@@ -36,7 +30,6 @@ group = 'com.thenatekirby.babel'
 archivesBaseName = mod_id
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
     mappings channel: 'official', version: "${mc_version}"
@@ -47,10 +40,7 @@ minecraft {
             workingDirectory project.file('run')
             arg "-mixin.config=babel.mixins.json"
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -62,10 +52,7 @@ minecraft {
             workingDirectory project.file('run')
             arg "-mixin.config=babel.mixins.json"
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -77,13 +64,9 @@ minecraft {
             workingDirectory project.file('run')
             arg "-mixin.config=babel.mixins.json"
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', "${mod_id}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
