@@ -1,8 +1,12 @@
 package com.thenatekirby.babel.machine.menu;
 
+import com.thenatekirby.babel.Babel;
 import com.thenatekirby.babel.core.api.IBooleanProvider;
 import com.thenatekirby.babel.core.api.ISyncable;
+import com.thenatekirby.babel.gui.buttons.GuiButton;
+import com.thenatekirby.babel.gui.buttons.GuiRedstoneToggleButton;
 import com.thenatekirby.babel.machine.entity.WorkingBlockEntity;
+import com.thenatekirby.babel.network.packet.ToggleRedstoneModePacket;
 import com.thenatekirby.babel.network.sync.SyncableEnergyStats;
 import com.thenatekirby.babel.network.sync.SyncableProgress;
 import com.thenatekirby.babel.network.sync.SyncableRedstoneMode;
@@ -72,12 +76,13 @@ public class WorkingMenu extends BabelMenu {
     // ====---------------------------------------------------------------------------====
     // region Helpers
 
-    // TODO: Gui
-//    public GuiRedstoneToggleView.IOnRedstoneToggledListener makeRedstoneToggledListener() {
-//        return (forward) -> Babel.NETWORK.sendToServer(new ToggleRedstoneModePacket(blockPos, forward));
-//    }
-//
-//    public GuiButton.IOnClickListener makeWorkingAreaToggledListener() {
-//        return (context) -> getWorkingBlockEntity().toggleShowingWorkingArea();
-//    }
+    public GuiRedstoneToggleButton.IOnRedstoneToggledListener makeRedstoneToggledListener() {
+        return (forward) -> Babel.NETWORK.sendToServer(new ToggleRedstoneModePacket(blockPos, forward));
+    }
+
+    public GuiButton.IOnClickListener makeWorkingAreaToggledListener() {
+        return (context) -> getWorkingBlockEntity().toggleShowingWorkingArea();
+    }
+
+    // endregion
 }

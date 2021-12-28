@@ -62,7 +62,6 @@ public class BabelSlotItemHandler implements IItemHandler {
         return this;
     }
 
-    // TODO: Gui
     public BabelSlotItemHandler withHintView(GuiView hintView) {
         this.hintView = hintView;
         return this;

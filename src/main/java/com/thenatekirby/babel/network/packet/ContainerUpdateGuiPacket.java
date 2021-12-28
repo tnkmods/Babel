@@ -1,6 +1,7 @@
 package com.thenatekirby.babel.network.packet;
 
 import com.thenatekirby.babel.core.api.IPacketHandler;
+import com.thenatekirby.babel.machine.menu.BabelMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -45,10 +46,9 @@ public class ContainerUpdateGuiPacket {
 
                 Player playerEntity = Minecraft.getInstance().player;
 
-                // TODO: BabelContainer
-//                if (playerEntity != null && playerEntity.containerMenu instanceof BabelContainer && playerEntity.containerMenu.containerId == packet.windowId) {
-//                    ((BabelContainer) playerEntity.containerMenu).receive(packet);
-//                }
+                if (playerEntity != null && playerEntity.containerMenu instanceof BabelMenu && playerEntity.containerMenu.containerId == packet.windowId) {
+                    ((BabelMenu) playerEntity.containerMenu).receive(packet);
+                }
             });
 
             context.setPacketHandled(true);

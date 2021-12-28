@@ -1,10 +1,12 @@
 package com.thenatekirby.babel.machine.menu;
 
+import com.thenatekirby.babel.Babel;
 import com.thenatekirby.babel.capability.item.BabelSlotItemHandler;
 import com.thenatekirby.babel.core.api.ISyncable;
 import com.thenatekirby.babel.machine.entity.BabelBlockEntity;
 import com.thenatekirby.babel.machine.inventory.MachineInventory;
 import com.thenatekirby.babel.machine.slot.BabelSlot;
+import com.thenatekirby.babel.mixin.AbstractContainerMenuMixin;
 import com.thenatekirby.babel.network.packet.ContainerUpdateGuiPacket;
 import com.thenatekirby.babel.network.sync.SyncableProgress;
 import com.thenatekirby.babel.registration.DeferredMenu;
@@ -13,6 +15,8 @@ import com.thenatekirby.babel.util.ServerUtil;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ContainerListener;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -77,9 +81,9 @@ public class BabelMenu extends AbstractContainerMenu {
         return machineInventory;
     }
 
-//    protected List<IContainerListener> getContainerListeners() {
-//        return ((ContainerMixin) this).getContainerListeners();
-//    }
+    protected List<ContainerListener> getContainerListeners() {
+        return ((AbstractContainerMenuMixin) this).getContainerListeners();
+    }
 
     protected List<ISyncable> getSyncables() {
         List<ISyncable> syncables = new ArrayList<>();
@@ -120,13 +124,12 @@ public class BabelMenu extends AbstractContainerMenu {
             }
 
             ContainerUpdateGuiPacket packet = new ContainerUpdateGuiPacket(containerId, packetBuffer);
-            // TODO: Broadcast Changes
-//            List<IContainerListener> listeners = getContainerListeners();
-//            for (IContainerListener listener : listeners) {
-//                if (listener instanceof ServerPlayerEntity) {
-//                    Babel.NETWORK.sendToPlayer((ServerPlayerEntity) listener, packet);
-//                }
-//            }
+            List<ContainerListener> listeners = getContainerListeners();
+            for (ContainerListener listener : listeners) {
+                if (listener instanceof ServerPlayer) {
+                    Babel.NETWORK.sendToPlayer((ServerPlayer) listener, packet);
+                }
+            }
         });
     }
 
