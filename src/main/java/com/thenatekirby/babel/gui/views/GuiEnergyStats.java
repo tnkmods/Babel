@@ -1,11 +1,9 @@
 package com.thenatekirby.babel.gui.views;
 
-
 import com.thenatekirby.babel.core.api.IEnergyStatsProvider;
 import com.thenatekirby.babel.machine.config.EnergyStats;
 import com.thenatekirby.babel.util.StringFormatting;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
@@ -33,10 +31,14 @@ public class GuiEnergyStats extends GuiTextureView {
         this.provider = provider;
     }
 
+    // ====---------------------------------------------------------------------------====
+    // region Tooltips
+
     @Override
     public void addTooltips(List<Component> tooltips) {
         super.addTooltips(tooltips);
 
+        // TODO: Localize
         EnergyStats stats = provider.getEnergyStats();
         String accepts = StringFormatting.formatNumber(stats.getAccepts());
         String consumes = StringFormatting.formatNumber(stats.getConsumes());
@@ -52,4 +54,6 @@ public class GuiEnergyStats extends GuiTextureView {
             tooltips.add(new TextComponent("Speed: " + speed + "x").withStyle(ChatFormatting.DARK_GRAY));
         }
     }
+
+    // endregion
 }

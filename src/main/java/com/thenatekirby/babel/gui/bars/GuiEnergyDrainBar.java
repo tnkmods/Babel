@@ -20,7 +20,7 @@ public class GuiEnergyDrainBar extends GuiVerticalBar {
         }
     };
 
-    private IProgress progressProvider;
+    private final IProgress progressProvider;
 
     public GuiEnergyDrainBar(int x, int y) {
         super(x, y, 8, 44, BAR_TYPE);

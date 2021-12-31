@@ -23,12 +23,15 @@ public class GuiCooldownBar extends GuiHorizontalBar {
         }
     };
 
-    private IProgress progressProvider;
+    private final IProgress progressProvider;
 
     public GuiCooldownBar(int x, int y, IProgress progressProvider) {
         super(x, y, 33, 5, BAR_TYPE);
         this.progressProvider = new InvertedProgress(progressProvider);
     }
+
+    // ====---------------------------------------------------------------------------====
+    // region Getters
 
     @Nullable
     @Override
@@ -36,9 +39,17 @@ public class GuiCooldownBar extends GuiHorizontalBar {
         return progressProvider;
     }
 
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region Tooltips
+
     @Override
     public void addTooltips(List<Component> tooltips) {
         super.addTooltips(tooltips);
+
+        // TODO: Localize
         tooltips.add(new TextComponent("Cooldown: " + progressProvider.getProgressCurrent() + " ticks"));
     }
+
+    // endregion
 }

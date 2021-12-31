@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -28,10 +27,10 @@ public class GuiView extends AbstractWidget {
     public static final int MOUSE_BUTTON_LEFT = 0;
     public static final int MOUSE_BUTTON_RIGHT = 1;
 
-    private int x = 0;
-    private int y = 0;
-    private int width = 0;
-    private int height = 0;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
     private Frame frame = Frame.ZERO;
 
     private IGuiRenderer renderer;

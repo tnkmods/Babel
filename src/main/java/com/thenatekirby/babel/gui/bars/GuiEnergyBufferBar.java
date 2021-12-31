@@ -11,7 +11,7 @@ import java.util.List;
 // ====---------------------------------------------------------------------------====
 
 public class GuiEnergyBufferBar extends GuiVerticalBar {
-    private static IVerticalBarType BAR_TYPE = new IVerticalBarType() {
+    private static final IVerticalBarType BAR_TYPE = new IVerticalBarType() {
         @Override
         public int getTextureX(boolean filled) {
             return filled ? 8 : 0;
@@ -30,20 +30,30 @@ public class GuiEnergyBufferBar extends GuiVerticalBar {
         this.progressProvider = progressProvider;
     }
 
+    // ====---------------------------------------------------------------------------====
+    // region Getters
+
     @Nullable
     @Override
     public IProgress getProgressProvider() {
         return progressProvider;
     }
 
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region Tooltips
+
     @Override
     public void addTooltips(List<Component> tooltips) {
         super.addTooltips(tooltips);
 
+        // TODO: Localize
         tooltips.add(new TextComponent(
                 StringFormatting.formatNumber(progressProvider.getProgressCurrent())
                         + "/"
                         + StringFormatting.formatNumber(progressProvider.getProgressMax()) + " FE")
         );
     }
+
+    // endregion
 }

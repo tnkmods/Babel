@@ -18,7 +18,7 @@ import java.util.List;
 // ====---------------------------------------------------------------------------====
 
 public class ViewBuilder {
-    private GuiRenderer renderer;
+    private final GuiRenderer renderer;
     private final List<GuiView> subviews;
 
     public ViewBuilder(GuiRenderer renderer, List<GuiView> subviews) {
