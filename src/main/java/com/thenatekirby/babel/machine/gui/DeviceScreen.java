@@ -1,6 +1,5 @@
 package com.thenatekirby.babel.machine.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.thenatekirby.babel.babelmod.BabelTextureLocations;
 import com.thenatekirby.babel.core.api.IBackgroundGuiView;
@@ -18,7 +17,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -162,10 +160,8 @@ public class DeviceScreen<T extends BabelMenu> extends AbstractContainerScreen<T
     protected void renderBg(@Nonnull PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         ResourceLocation resourceLocation = getBackgroundResourceLocation();
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, resourceLocation);
-
+        RenderUtil.withPositionTexShader();
+        RenderUtil.resetColor();
         RenderUtil.bindTexture(resourceLocation);
 
         int relX = (this.width - this.imageWidth) / 2;
@@ -188,6 +184,10 @@ public class DeviceScreen<T extends BabelMenu> extends AbstractContainerScreen<T
             GuiUtil.drawHoveringText(matrixStack, tooltips, pointX + leftPos, pointY + topPos, width, font);
         }
     }
+
+    // endregion
+    // ====---------------------------------------------------------------------------====
+    // region Event Handling
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -255,5 +255,4 @@ public class DeviceScreen<T extends BabelMenu> extends AbstractContainerScreen<T
     }
 
     // endregion
-
 }

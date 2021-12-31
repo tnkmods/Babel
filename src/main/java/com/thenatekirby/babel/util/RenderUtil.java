@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.thenatekirby.babel.core.api.IItemProvider;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
@@ -94,5 +95,9 @@ public class RenderUtil {
 
     public static void bindTexture(ResourceLocation resourceLocation) {
         RenderSystem.setShaderTexture(0, resourceLocation);
+    }
+
+    public static void withPositionTexShader() {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
     }
 }
