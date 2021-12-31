@@ -66,18 +66,23 @@ public class RenderUtil {
     }
 
     public static void resetColor() {
-        // TODO: Colors
-//        RenderSystem.color4f(1, 1, 1, 1);
+        color4f(1, 1, 1, 1);
     }
 
-    public static void setColor4f(int color) {
-        // TODO: Colors
-//        RenderSystem.color4f(getRed(color), getGreen(color), getBlue(color), getAlpha(color));
+    public static void color4f(int color) {
+        RenderSystem.setShaderColor(getRed(color), getGreen(color), getBlue(color), getAlpha(color));
     }
 
-    public static void setColor3f(int color) {
-        // TODO: Colors
-//        RenderSystem.color3f(getRed(color), getGreen(color), getBlue(color));
+    public static void color4f(float red, float green, float blue, float alpha) {
+        RenderSystem.setShaderColor(red, green, blue, alpha);
+    }
+
+    public static void color3f(int color) {
+        RenderSystem.setShaderColor(getRed(color), getGreen(color), getBlue(color), 1.0f);
+    }
+
+    public static void color3f(float red, float green, float blue) {
+        RenderSystem.setShaderColor(red, green, blue, 1.0f);
     }
 
     public static int getDefaultTextColor() {
@@ -89,7 +94,5 @@ public class RenderUtil {
 
     public static void bindTexture(ResourceLocation resourceLocation) {
         RenderSystem.setShaderTexture(0, resourceLocation);
-
-//        getMinecraft().getTextureManager().bindForSetup(resourceLocation);
     }
 }

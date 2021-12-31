@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 // ====---------------------------------------------------------------------------====
 
 public class GuiSlotHintView extends GuiView {
-    private ItemLike itemProvider;
+    private final ItemLike itemProvider;
 
     public GuiSlotHintView(IItemProvider itemProvider) {
         super(0, 0, 14, 14);
@@ -27,8 +27,6 @@ public class GuiSlotHintView extends GuiView {
     }
 
     public void renderHintInto(@Nonnull Frame frame, PoseStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
-        renderer.bindTexture(getTextureLocation());
-
         ItemRenderer itemRenderer = renderer.getItemRenderer();
         ItemStack itemStack = new ItemStack(itemProvider);
         itemRenderer.renderAndDecorateFakeItem(itemStack, frame.x, frame.y);

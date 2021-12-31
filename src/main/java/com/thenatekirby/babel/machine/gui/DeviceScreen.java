@@ -23,7 +23,6 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.client.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -186,8 +185,6 @@ public class DeviceScreen<T extends BabelMenu> extends AbstractContainerScreen<T
         if (targetView != null) {
             List<Component> tooltips = new ArrayList<>();
             targetView.addTooltips(tooltips);
-
-            // TODO: Draw Hovering Text
             GuiUtil.drawHoveringText(matrixStack, tooltips, pointX + leftPos, pointY + topPos, width, font);
         }
     }
