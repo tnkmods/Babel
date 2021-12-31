@@ -29,6 +29,9 @@ public interface IModLifecycleAdapter {
     // ====---------------------------------------------------------------------------====
     // region Registration
 
+    default void onRegisterRecipeCollections() {
+    }
+
     default void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
     }
 

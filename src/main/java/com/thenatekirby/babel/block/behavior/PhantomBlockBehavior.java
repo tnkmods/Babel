@@ -1,4 +1,4 @@
-package com.thenatekirby.babel.block;
+package com.thenatekirby.babel.block.behavior;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -11,6 +11,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class PhantomBlockBehavior {
     public static VoxelShape getCollisionShape(@Nonnull BlockState blockState, @Nonnull BlockGetter block, @Nonnull BlockPos blockPos, @Nonnull CollisionContext context) {

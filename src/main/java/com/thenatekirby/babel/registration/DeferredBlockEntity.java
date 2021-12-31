@@ -44,7 +44,7 @@ public class DeferredBlockEntity<T extends Block, U extends BlockEntity> impleme
         return block.get();
     }
 
-    public BlockEntityType<U> asTileEntityType() {
+    public BlockEntityType<U> asBlockEntityType() {
         return tileEntity.get();
     }
 

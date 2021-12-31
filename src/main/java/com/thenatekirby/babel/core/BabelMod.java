@@ -42,6 +42,7 @@ public class BabelMod {
         lifecycleAdapter.onRegisterConfig();
         lifecycleAdapter.onLoadConfig();
         lifecycleAdapter.onSetupRegistries(new RegistryBuilder());
+        lifecycleAdapter.onRegisterRecipeCollections();
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {

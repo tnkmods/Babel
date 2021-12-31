@@ -1,7 +1,7 @@
 package com.thenatekirby.babel.network.packet;
 
 import com.thenatekirby.babel.core.api.IPacketHandler;
-import com.thenatekirby.babel.machine.entity.WorkingBlockEntity;
+import com.thenatekirby.babel.machine.entity.DeviceBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -44,8 +44,8 @@ public class ToggleRedstoneModePacket {
                 if (entity != null) {
                     Level level = entity.level;
                     BlockEntity blockEntity = level.getBlockEntity(packet.blockPos);
-                    if (blockEntity instanceof WorkingBlockEntity) {
-                        ((WorkingBlockEntity) blockEntity).toggleRedstoneMode(packet.forward);
+                    if (blockEntity instanceof DeviceBlockEntity) {
+                        ((DeviceBlockEntity) blockEntity).toggleRedstoneMode(packet.forward);
                     }
                 }
             });

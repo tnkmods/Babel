@@ -2,12 +2,11 @@ package com.thenatekirby.babel.gui.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.thenatekirby.babel.core.api.IGuiRenderer;
-import com.thenatekirby.babel.machine.gui.BabelMenuScreen;
+import com.thenatekirby.babel.machine.gui.DeviceScreen;
 import com.thenatekirby.babel.util.RenderUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.GuiUtils;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -16,9 +15,9 @@ import java.util.List;
 // ====---------------------------------------------------------------------------====
 
 public class GuiRenderer implements IGuiRenderer {
-    private final BabelMenuScreen<?> screen;
+    private final DeviceScreen<?> screen;
 
-    public GuiRenderer(BabelMenuScreen<?> screen) {
+    public GuiRenderer(DeviceScreen<?> screen) {
         this.screen = screen;
     }
 

@@ -1,10 +1,12 @@
 package com.thenatekirby.babel.capability.item;
 
+import com.thenatekirby.babel.machine.config.InventoryItemSlot;
 import com.thenatekirby.babel.util.ItemStackUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 // ====---------------------------------------------------------------------------====
@@ -13,12 +15,17 @@ import java.util.List;
  * An implementation of IItemHandler that handles multiple slots correctly, deferring
  * each to a SlotItemHandler, so they can validate their own contents
  */
-public class BabelItemHandler implements IItemHandler {
+public class MultiSlotItemHandler implements IItemHandler {
     @Nonnull
-    private final List<BabelSlotItemHandler> allSlots;
+    private final List<ValidatedSlotItemHandler> allSlots;
 
-    public BabelItemHandler(@Nonnull List<BabelSlotItemHandler> allSlots) {
-        this.allSlots = allSlots;
+    public MultiSlotItemHandler(@Nonnull List<InventoryItemSlot> allSlots) {
+        List<ValidatedSlotItemHandler> slotItemHandlers = new ArrayList();
+        for (InventoryItemSlot slot : allSlots) {
+            slotItemHandlers.add(slot.getItemHandler());
+        }
+
+        this.allSlots = slotItemHandlers;
     }
 
     @Override
@@ -26,7 +33,7 @@ public class BabelItemHandler implements IItemHandler {
         return allSlots.size();
     }
 
-    public BabelSlotItemHandler getSlot(int slot) {
+    public ValidatedSlotItemHandler getSlot(int slot) {
         return allSlots.get(slot);
     }
 
@@ -44,7 +51,7 @@ public class BabelItemHandler implements IItemHandler {
         }
 
         ItemStack insertStack = ItemStackUtil.itemStackWithSize(stack, stack.getCount());
-        for (BabelSlotItemHandler itemSlot : allSlots) {
+        for (ValidatedSlotItemHandler itemSlot : allSlots) {
             insertStack = itemSlot.insertItem(0, insertStack, simulate);
 
             if (insertStack.isEmpty()) {
@@ -76,7 +83,7 @@ public class BabelItemHandler implements IItemHandler {
     }
 
     @Nonnull
-    public List<BabelSlotItemHandler> getAllSlots() {
+    public List<ValidatedSlotItemHandler> getAllSlots() {
         return allSlots;
     }
 }

@@ -1,8 +1,9 @@
 package com.thenatekirby.babel.machine.handler;
 
-import com.thenatekirby.babel.capability.item.BabelSlotItemHandler;
+import com.thenatekirby.babel.capability.item.ValidatedSlotItemHandler;
 import com.thenatekirby.babel.core.NBTConstants;
-import com.thenatekirby.babel.machine.inventory.MachineInventory;
+import com.thenatekirby.babel.machine.config.InventoryItemSlot;
+import com.thenatekirby.babel.machine.inventory.DeviceInventory;
 import com.thenatekirby.babel.util.ItemStackUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -17,21 +18,21 @@ import java.util.List;
 
 public class MachineItemHandler implements IItemHandler {
     @Nonnull
-    private final MachineInventory inventory;
+    private final DeviceInventory inventory;
 
     @Nonnull
-    private final List<BabelSlotItemHandler> inputSlots;
+    private final List<InventoryItemSlot> inputSlots;
 
     @Nonnull
-    private final List<BabelSlotItemHandler> outputSlots;
+    private final List<InventoryItemSlot> outputSlots;
 
     @Nonnull
-    private final List<BabelSlotItemHandler> auxiliarySlots;
+    private final List<InventoryItemSlot> auxiliarySlots;
 
     @Nonnull
-    private final List<BabelSlotItemHandler> allSlots = new ArrayList<>();
+    private final List<InventoryItemSlot> allSlots = new ArrayList<>();
 
-    public MachineItemHandler(@Nonnull MachineInventory inventory, @Nonnull List<BabelSlotItemHandler> inputSlots, @Nonnull List<BabelSlotItemHandler> outputSlots, @Nonnull List<BabelSlotItemHandler> auxiliarySlots) {
+    public MachineItemHandler(@Nonnull DeviceInventory inventory, @Nonnull List<InventoryItemSlot> inputSlots, @Nonnull List<InventoryItemSlot> outputSlots, @Nonnull List<InventoryItemSlot> auxiliarySlots) {
         this.inventory = inventory;
         this.inputSlots = inputSlots;
         this.outputSlots = outputSlots;
@@ -47,14 +48,14 @@ public class MachineItemHandler implements IItemHandler {
         return allSlots.size();
     }
 
-    public BabelSlotItemHandler getSlot(int slot) {
+    public InventoryItemSlot getSlot(int slot) {
         return allSlots.get(slot);
     }
 
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        return getSlot(slot).getItemStack();
+        return getSlot(slot).getItemHandler().getItemStack();
     }
 
     @Nonnull
@@ -66,8 +67,8 @@ public class MachineItemHandler implements IItemHandler {
         }
 
         ItemStack insertStack = ItemStackUtil.itemStackWithSize(stack, stack.getCount());
-        for (BabelSlotItemHandler itemSlot : inputSlots) {
-            insertStack = itemSlot.insertItem(0, insertStack, simulate);
+        for (InventoryItemSlot itemSlot : inputSlots) {
+            insertStack = itemSlot.getItemHandler().insertItem(0, insertStack, simulate);
 
             if (insertStack.isEmpty()) {
                 return ItemStack.EMPTY;
@@ -86,36 +87,36 @@ public class MachineItemHandler implements IItemHandler {
             return ItemStack.EMPTY;
         }
 
-        return allSlots.get(slot).extractItem(0, amount, simulate);
+        return allSlots.get(slot).getItemHandler().extractItem(0, amount, simulate);
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        return getSlot(slot).getSlotLimit(0);
+        return getSlot(slot).getItemHandler().getSlotLimit(0);
     }
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return getSlot(slot).isItemValid(0, stack);
+        return getSlot(slot).getItemHandler().isItemValid(0, stack);
     }
 
     @Nonnull
-    public List<BabelSlotItemHandler> getInputSlots() {
+    public List<InventoryItemSlot> getInputSlots() {
         return inputSlots;
     }
 
     @Nonnull
-    public List<BabelSlotItemHandler> getOutputSlots() {
+    public List<InventoryItemSlot> getOutputSlots() {
         return outputSlots;
     }
 
     @Nonnull
-    public List<BabelSlotItemHandler> getAuxiliarySlots() {
+    public List<InventoryItemSlot> getAuxiliarySlots() {
         return auxiliarySlots;
     }
 
     @Nonnull
-    public List<BabelSlotItemHandler> getAllSlots() {
+    public List<InventoryItemSlot> getAllSlots() {
         return allSlots;
     }
 
@@ -126,8 +127,8 @@ public class MachineItemHandler implements IItemHandler {
         CompoundTag nbt = new CompoundTag();
         ListTag listNBT = new ListTag();
 
-        for (BabelSlotItemHandler slot : allSlots) {
-            listNBT.add(slot.serializeNBT());
+        for (InventoryItemSlot slot : allSlots) {
+            listNBT.add(slot.getItemHandler().serializeNBT());
         }
 
         nbt.put("slots", listNBT);
@@ -138,7 +139,7 @@ public class MachineItemHandler implements IItemHandler {
         ListTag listNBT = nbt.getList("slots", NBTConstants.TAG_COMPOUND);
         for (int idx = 0; idx < listNBT.size(); idx++) {
             CompoundTag slotNBT = listNBT.getCompound(idx);
-            allSlots.get(idx).deserializeNBT(slotNBT);
+            allSlots.get(idx).getItemHandler().deserializeNBT(slotNBT);
         }
     }
 

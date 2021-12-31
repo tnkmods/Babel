@@ -7,15 +7,21 @@ import com.thenatekirby.babel.core.gui.Frame;
 import com.thenatekirby.babel.gui.GuiView;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nonnull;
 
 // ====---------------------------------------------------------------------------====
 
 public class GuiSlotHintView extends GuiView {
-    private IItemProvider itemProvider;
+    private ItemLike itemProvider;
 
     public GuiSlotHintView(IItemProvider itemProvider) {
+        super(0, 0, 14, 14);
+        this.itemProvider = itemProvider;
+    }
+
+    public GuiSlotHintView(ItemLike itemProvider) {
         super(0, 0, 14, 14);
         this.itemProvider = itemProvider;
     }

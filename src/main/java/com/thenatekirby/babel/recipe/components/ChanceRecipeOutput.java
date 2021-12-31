@@ -3,6 +3,7 @@ package com.thenatekirby.babel.recipe.components;
 import com.google.gson.JsonObject;
 import com.thenatekirby.babel.core.api.IItemProvider;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nonnull;
 
@@ -30,6 +31,14 @@ public class ChanceRecipeOutput {
         return new ChanceRecipeOutput(resultId, count, chance);
     }
 
+    public static ChanceRecipeOutput fromItem(@Nonnull ItemLike item, float chance) {
+        return new ChanceRecipeOutput(item.asItem().getRegistryName().toString(), 1, chance);
+    }
+
+    public static ChanceRecipeOutput fromItem(@Nonnull ItemLike item, int count, float chance) {
+        return new ChanceRecipeOutput(item.asItem().getRegistryName().toString(), count, chance);
+    }
+
     public static ChanceRecipeOutput fromItem(@Nonnull IItemProvider item, float chance) {
         return new ChanceRecipeOutput(item.asItem().getRegistryName().toString(), 1, chance);
     }
@@ -37,6 +46,7 @@ public class ChanceRecipeOutput {
     public static ChanceRecipeOutput fromItem(@Nonnull IItemProvider item, int count, float chance) {
         return new ChanceRecipeOutput(item.asItem().getRegistryName().toString(), count, chance);
     }
+
 
     // endregion
     // ====---------------------------------------------------------------------------====

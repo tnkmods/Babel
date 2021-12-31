@@ -43,7 +43,6 @@ public class ContainerUpdateGuiPacket {
         public void handle(ContainerUpdateGuiPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
             NetworkEvent.Context context = contextSupplier.get();
             context.enqueueWork(() -> {
-
                 Player playerEntity = Minecraft.getInstance().player;
 
                 if (playerEntity != null && playerEntity.containerMenu instanceof BabelMenu && playerEntity.containerMenu.containerId == packet.windowId) {

@@ -1,5 +1,6 @@
 package com.thenatekirby.babel.core.lifecycle;
 
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -27,7 +28,11 @@ public class RegistryBuilder {
         register.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public void addContainers(DeferredRegister<MenuType<?>> register) {
+    public void addMenus(DeferredRegister<MenuType<?>> register) {
+        register.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+
+    public void addEntities(DeferredRegister<EntityType<?>> register) {
         register.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 }

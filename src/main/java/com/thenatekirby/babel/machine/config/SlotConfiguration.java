@@ -1,7 +1,5 @@
 package com.thenatekirby.babel.machine.config;
 
-import com.thenatekirby.babel.capability.item.BabelSlotItemHandler;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,9 +8,9 @@ import java.util.List;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SlotConfiguration<T extends SlotConfiguration> {
-    private final List<BabelSlotItemHandler> inputItemSlots = new ArrayList<>();
-    private final List<BabelSlotItemHandler> outputItemSlots = new ArrayList<>();
-    private final List<BabelSlotItemHandler> auxilaryItemSlots = new ArrayList<>();
+    private final List<InventoryItemSlot> inputItemSlots = new ArrayList<>();
+    private final List<InventoryItemSlot> outputItemSlots = new ArrayList<>();
+    private final List<InventoryItemSlot> auxilaryItemSlots = new ArrayList<>();
     private EnergyBuffer energyBuffer = EnergyBuffer.ZERO;
 
     protected SlotConfiguration() {
@@ -25,13 +23,18 @@ public class SlotConfiguration<T extends SlotConfiguration> {
         return new SlotConfiguration();
     }
 
-    public T withInputs(BabelSlotItemHandler... itemSlots) {
+    public T withInputs(InventoryItemSlot... itemSlots) {
         inputItemSlots.addAll(Arrays.asList(itemSlots));
         return (T) this;
     }
 
-    public T withOutputs(BabelSlotItemHandler... itemSlots) {
+    public T withOutputs(InventoryItemSlot... itemSlots) {
         outputItemSlots.addAll(Arrays.asList(itemSlots));
+        return (T) this;
+    }
+
+    public T withAuxiliaries(InventoryItemSlot... itemSlots) {
+        auxilaryItemSlots.addAll(Arrays.asList(itemSlots));
         return (T) this;
     }
 
@@ -40,24 +43,19 @@ public class SlotConfiguration<T extends SlotConfiguration> {
         return (T) this;
     }
 
-    public T withAuxiliaries(BabelSlotItemHandler... itemSlots) {
-        auxilaryItemSlots.addAll(Arrays.asList(itemSlots));
-        return (T) this;
-    }
-
     // endregion
     // ====---------------------------------------------------------------------------====
     // region Getters
 
-    public List<BabelSlotItemHandler> getInputItemSlots() {
+    public List<InventoryItemSlot> getInputItemSlots() {
         return inputItemSlots;
     }
 
-    public List<BabelSlotItemHandler> getOutputItemSlots() {
+    public List<InventoryItemSlot> getOutputItemSlots() {
         return outputItemSlots;
     }
 
-    public List<BabelSlotItemHandler> getAuxilaryItemSlots() {
+    public List<InventoryItemSlot> getAuxilaryItemSlots() {
         return auxilaryItemSlots;
     }
 

@@ -1,5 +1,6 @@
 package com.thenatekirby.babel.machine.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.thenatekirby.babel.babelmod.BabelTextureLocations;
 import com.thenatekirby.babel.core.api.IBackgroundGuiView;
@@ -11,16 +12,18 @@ import com.thenatekirby.babel.gui.render.GuiRenderer;
 import com.thenatekirby.babel.gui.slot.GuiSlot;
 import com.thenatekirby.babel.machine.menu.BabelMenu;
 import com.thenatekirby.babel.machine.slot.BabelSlot;
+import com.thenatekirby.babel.util.GuiUtil;
 import com.thenatekirby.babel.util.RenderUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.client.gui.GuiUtils;
 import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
@@ -30,13 +33,13 @@ import java.util.List;
 
 // ====---------------------------------------------------------------------------====
 
-public class BabelMenuScreen<T extends BabelMenu> extends AbstractContainerScreen<T> {
-    public BabelMenuScreen(T screenContainer, Inventory inv, TextComponent titleIn) {
+public class DeviceScreen<T extends BabelMenu> extends AbstractContainerScreen<T> {
+    public DeviceScreen(T screenContainer, Inventory inv, Component titleIn) {
         super(screenContainer, inv, titleIn);
     }
 
-    private List<Rect2i> extraBounds = new ArrayList<>();
-    private List<GuiView> subviews = new ArrayList<>();
+    private final List<Rect2i> extraBounds = new ArrayList<>();
+    private final List<GuiView> subviews = new ArrayList<>();
     private GuiRenderer renderer;
 
     private int pointX = 0;
@@ -89,6 +92,10 @@ public class BabelMenuScreen<T extends BabelMenu> extends AbstractContainerScree
         return extraBounds;
     }
 
+    protected boolean shouldCenterTitleText() {
+        return false;
+    }
+
     // endregion
     // ====---------------------------------------------------------------------------====
     // region Helpers
@@ -125,7 +132,6 @@ public class BabelMenuScreen<T extends BabelMenu> extends AbstractContainerScree
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.subviews.forEach(subview -> subview.render(matrixStack, mouseX, mouseY, partialTicks));
 
-
         renderTooltip(matrixStack, mouseX, mouseY);
         drawTooltips(matrixStack);
         matrixStack.popPose();
@@ -135,13 +141,16 @@ public class BabelMenuScreen<T extends BabelMenu> extends AbstractContainerScree
     protected void renderLabels(@Nonnull PoseStack matrixStack, int mouseX, int mouseY) {
         RenderUtil.resetColor();
 
-        this.drawTitleTextAt(matrixStack, 8.0F, 8.0F);
-//        this.drawCenteredTitleText(matrixStack, RenderUtil.getDefaultTextColor());
+        if (shouldCenterTitleText()) {
+            this.drawCenteredTitleText(matrixStack, RenderUtil.getDefaultTextColor());
+        } else {
+            this.drawTitleTextAt(matrixStack, 8.0F, 8.0F);
+        }
+
         this.drawInventoryTextAt(matrixStack,8.0F, (float)(this.imageHeight - 96 + 2), RenderUtil.getDefaultTextColor());
 
         for (Widget widgetObj : this.renderables) {
-            if (widgetObj instanceof AbstractWidget) {
-                AbstractWidget widget = (AbstractWidget) widgetObj;
+            if (widgetObj instanceof AbstractWidget widget) {
                 if (widget.isMouseOver(mouseX, mouseY)) {
                     widget.renderToolTip(matrixStack, mouseX - leftPos, mouseY - topPos);
                     break;
@@ -152,9 +161,12 @@ public class BabelMenuScreen<T extends BabelMenu> extends AbstractContainerScree
 
     @Override
     protected void renderBg(@Nonnull PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        RenderUtil.resetColor();
-
         ResourceLocation resourceLocation = getBackgroundResourceLocation();
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, resourceLocation);
+
         RenderUtil.bindTexture(resourceLocation);
 
         int relX = (this.width - this.imageWidth) / 2;
@@ -176,7 +188,7 @@ public class BabelMenuScreen<T extends BabelMenu> extends AbstractContainerScree
             targetView.addTooltips(tooltips);
 
             // TODO: Draw Hovering Text
-//            GuiUtils.drawHoveringText(matrixStack, tooltips, pointX + leftPos, pointY + topPos, width, height, -1, font);
+            GuiUtil.drawHoveringText(matrixStack, tooltips, pointX + leftPos, pointY + topPos, width, font);
         }
     }
 

@@ -10,6 +10,7 @@ import com.thenatekirby.babel.recipe.components.RecipeIngredient;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,11 +68,11 @@ public class ShapedRecipeBuilder {
         return withResult(result, 1);
     }
 
-    public ShapedRecipeBuilder withResult(IItemProvider itemProvider) {
+    public ShapedRecipeBuilder withResult(ItemLike itemProvider) {
         return withResult(itemProvider, 1);
     }
 
-    public ShapedRecipeBuilder withResult(IItemProvider itemProvider, int count) {
+    public ShapedRecipeBuilder withResult(ItemLike itemProvider, int count) {
         return withResult(Objects.requireNonNull(itemProvider.asItem().getRegistryName()).toString(), count);
     }
 

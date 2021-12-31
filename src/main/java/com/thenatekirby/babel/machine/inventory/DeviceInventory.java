@@ -1,10 +1,10 @@
 package com.thenatekirby.babel.machine.inventory;
 
-
 import com.thenatekirby.babel.capability.energy.BabelEnergyStorage;
-import com.thenatekirby.babel.capability.item.BabelItemHandler;
-import com.thenatekirby.babel.capability.item.BabelSlotItemHandler;
+import com.thenatekirby.babel.capability.item.MultiSlotItemHandler;
+import com.thenatekirby.babel.capability.item.ValidatedSlotItemHandler;
 import com.thenatekirby.babel.machine.config.EnergyBuffer;
+import com.thenatekirby.babel.machine.config.InventoryItemSlot;
 import com.thenatekirby.babel.machine.config.SlotConfiguration;
 import com.thenatekirby.babel.machine.entity.BabelBlockEntity;
 import com.thenatekirby.babel.machine.handler.MachineItemHandler;
@@ -22,16 +22,16 @@ import java.util.stream.Collectors;
 // ====---------------------------------------------------------------------------====
 
 @SuppressWarnings("rawtypes")
-public abstract class MachineInventory<T extends BabelBlockEntity> implements INBTSerializable<CompoundTag>, BabelEnergyStorage.IEnergyStorageChangedObserver, BabelSlotItemHandler.IOnSlotChangedListener {
+public abstract class DeviceInventory<T extends BabelBlockEntity> implements INBTSerializable<CompoundTag>, BabelEnergyStorage.IEnergyStorageChangedObserver, ValidatedSlotItemHandler.IOnSlotChangedListener {
     private final T tileEntity;
 
     private BabelEnergyStorage energyStorage = BabelEnergyStorage.fromBuffer(EnergyBuffer.ZERO);
     private MachineItemHandler inputItemHandler;
     private MachineItemHandler outputItemHandler;
     private MachineItemHandler allItemHandler;
-    private BabelItemHandler manualItemHandler;
+    private MultiSlotItemHandler manualItemHandler;
 
-    public MachineInventory(T tileEntity) {
+    public DeviceInventory(T tileEntity) {
         this.tileEntity = tileEntity;
 
         this.setupHandlers();
@@ -56,7 +56,7 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
         return allItemHandler;
     }
 
-    public BabelItemHandler getManualItemHandler() {
+    public MultiSlotItemHandler getManualItemHandler() {
         return manualItemHandler;
     }
 
@@ -73,11 +73,11 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
 
     @SuppressWarnings("unchecked")
     protected void setupHandlers(@Nonnull SlotConfiguration configuration) {
-        List<BabelSlotItemHandler> inputSlots = configuration.getInputItemSlots();
-        List<BabelSlotItemHandler> outputSlots = configuration.getOutputItemSlots();
-        List<BabelSlotItemHandler> auxSlots = configuration.getAuxilaryItemSlots();
+        List<InventoryItemSlot> inputSlots = configuration.getInputItemSlots();
+        List<InventoryItemSlot> outputSlots = configuration.getOutputItemSlots();
+        List<InventoryItemSlot> auxSlots = configuration.getAuxilaryItemSlots();
 
-        List<BabelSlotItemHandler> allSlots = new ArrayList<>();
+        List<InventoryItemSlot> allSlots = new ArrayList<>();
         allSlots.addAll(inputSlots);
         allSlots.addAll(outputSlots);
         allSlots.addAll(auxSlots);
@@ -88,10 +88,10 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
         this.inputItemHandler = new MachineItemHandler(this, inputSlots, Collections.emptyList(), Collections.emptyList());
         this.outputItemHandler = new MachineItemHandler(this, Collections.emptyList(), outputSlots, Collections.emptyList());
         this.allItemHandler = new MachineItemHandler(this, inputSlots, outputSlots, auxSlots);
-        this.manualItemHandler = new BabelItemHandler(allSlots);
+        this.manualItemHandler = new MultiSlotItemHandler(allSlots);
 
-        for (BabelSlotItemHandler slot : allSlots) {
-            slot.setListener(this);
+        for (InventoryItemSlot slot : allSlots) {
+            slot.getItemHandler().setListener(this);
         }
     }
 
@@ -105,8 +105,8 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
 
     // Helper for BabelContainer.transferStackInSlot only.
     public boolean canInsert(@Nonnull ItemStack itemStack) {
-        for (BabelSlotItemHandler itemSlot : inputItemHandler.getInputSlots()) {
-            ItemStack result = itemSlot.insertItem(0, itemStack, true);
+        for (InventoryItemSlot itemSlot : inputItemHandler.getInputSlots()) {
+            ItemStack result = itemSlot.getItemHandler().insertItem(0, itemStack, true);
             if (result.getCount() < itemStack.getCount()) {
                 return true;
             }
@@ -127,28 +127,28 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
     // ====---------------------------------------------------------------------------====
     // region Items
 
-    public List<BabelSlotItemHandler> getInputSlots() {
+    public List<InventoryItemSlot> getInputSlots() {
         return allItemHandler.getInputSlots();
     }
 
-    public List<BabelSlotItemHandler> getOutputSlots() {
+    public List<InventoryItemSlot> getOutputSlots() {
         return allItemHandler.getOutputSlots();
     }
 
-    public List<BabelSlotItemHandler> getAuxiliarySlots() {
+    public List<InventoryItemSlot> getAuxiliarySlots() {
         return allItemHandler.getAuxiliarySlots();
     }
 
     public ItemStack getStackInSlot(int index) {
-        return allItemHandler.getSlot(index).getItemStack();
+        return allItemHandler.getSlot(index).getItemHandler().getItemStack();
     }
 
     public void setStackInSlot(@Nonnull ItemStack itemStack, int index) {
-        allItemHandler.getSlot(index).setItemStack(itemStack);
+        allItemHandler.getSlot(index).getItemHandler().setItemStack(itemStack);
     }
 
     public ItemStack getAuxiliaryStackInSlot(int index) {
-        return getAuxiliarySlots().get(index).getItemStack();
+        return getAuxiliarySlots().get(index).getItemHandler().getItemStack();
     }
 
     // endregion
@@ -156,7 +156,11 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
     // region Contents
 
     public MachineContents getInventoryContents() {
-        List<ItemStack> inputs = getInputSlots().stream().map(BabelSlotItemHandler::getItemStack).collect(Collectors.toList());
+        List<ItemStack> inputs = new ArrayList<>();
+        for (InventoryItemSlot slot : getInputSlots()) {
+            inputs.add(slot.getItemHandler().getItemStack());
+        }
+
         return new MachineContents(inputs, Collections.emptyList());
     }
 
@@ -170,8 +174,8 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
             return false;
         }
 
-        for (BabelSlotItemHandler itemSlot : getOutputSlots()) {
-            ItemStack slotStack = itemSlot.getItemStack();
+        for (InventoryItemSlot itemSlot : getOutputSlots()) {
+            ItemStack slotStack = itemSlot.getItemHandler().getItemStack();
             if (slotStack.isEmpty()) {
                 return true;
             }
@@ -195,10 +199,10 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
             return;
         }
 
-        for (BabelSlotItemHandler itemSlot : getOutputSlots()) {
-            ItemStack slotStack = itemSlot.getItemStack();
+        for (InventoryItemSlot itemSlot : getOutputSlots()) {
+            ItemStack slotStack = itemSlot.getItemHandler().getItemStack();
             if (slotStack.isEmpty()) {
-                itemSlot.setItemStack(resultStack);
+                itemSlot.getItemHandler().setItemStack(resultStack);
                 return;
             }
 
@@ -215,7 +219,7 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
     }
 
     public void transferToOutput(ItemStack itemStack, int slot) {
-        allItemHandler.getSlot(slot).setItemStack(itemStack);
+        allItemHandler.getSlot(slot).getItemHandler().setItemStack(itemStack);
     }
 
     public void consumeInputInSlot(int slot) {
@@ -231,13 +235,13 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
     }
 
     public void consumeInputs(List<ItemStack> itemStacks) {
-        for (BabelSlotItemHandler itemSlot : getInputSlots()) {
+        for (InventoryItemSlot itemSlot : getInputSlots()) {
             for (ItemStack itemStack : itemStacks) {
-                if (ItemStackUtil.areItemStacksEqual(itemSlot.getItemStack(), itemStack)) {
-                    if (itemSlot.getItemStack().getCount() <= itemStack.getCount()) {
-                        itemSlot.setItemStack(ItemStack.EMPTY);
+                if (ItemStackUtil.areItemStacksEqual(itemSlot.getItemHandler().getItemStack(), itemStack)) {
+                    if (itemSlot.getItemHandler().getItemStack().getCount() <= itemStack.getCount()) {
+                        itemSlot.getItemHandler().setItemStack(ItemStack.EMPTY);
                     } else {
-                        itemSlot.getItemStack().shrink(itemStack.getCount());
+                        itemSlot.getItemHandler().getItemStack().shrink(itemStack.getCount());
                     }
                 }
             }
@@ -287,7 +291,7 @@ public abstract class MachineInventory<T extends BabelBlockEntity> implements IN
     // region IOnSlotChangedListener
 
     @Override
-    public void onSlotChanged(BabelSlotItemHandler slot) {
+    public void onSlotChanged(ValidatedSlotItemHandler slot) {
         this.tileEntity.setChanged();
         this.tileEntity.markInventoryDirty();
     }

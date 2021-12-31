@@ -3,6 +3,7 @@ package com.thenatekirby.babel.entity;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.network.NetworkHooks;
@@ -17,6 +18,10 @@ public class ItemInWorldEntity extends ItemEntity {
 
     public ItemInWorldEntity(EntityType<? extends ItemEntity> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public ItemInWorldEntity(Level level, double x, double y, double z, ItemStack itemStack) {
+        super(level, x, y, z, itemStack);
     }
 
     // ====---------------------------------------------------------------------------====

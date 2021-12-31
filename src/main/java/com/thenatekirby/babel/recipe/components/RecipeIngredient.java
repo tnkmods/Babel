@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
@@ -51,11 +52,11 @@ public class RecipeIngredient {
         return new RecipeIngredient(false, resultId.toString(), 1);
     }
 
-    public static RecipeIngredient fromItem(@Nonnull IItemProvider item) {
+    public static RecipeIngredient fromItem(@Nonnull ItemLike item) {
         return new RecipeIngredient(false, item.asItem().getRegistryName().toString(), 1);
     }
 
-    public static RecipeIngredient fromItem(@Nonnull IItemProvider item, int count) {
+    public static RecipeIngredient fromItem(@Nonnull ItemLike item, int count) {
         return new RecipeIngredient(false, item.asItem().getRegistryName().toString(), count);
     }
 

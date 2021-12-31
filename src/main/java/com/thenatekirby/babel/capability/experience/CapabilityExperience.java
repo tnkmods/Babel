@@ -10,7 +10,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 // ====---------------------------------------------------------------------------====
 
 public class CapabilityExperience {
-    public static final Capability<IEnergyStorage> EXPERIENCE = CapabilityManager.get(new CapabilityToken<>(){});;
+    public static final Capability<IExperienceStorage> EXPERIENCE = CapabilityManager.get(new CapabilityToken<>(){});;
 
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(IExperienceStorage.class);

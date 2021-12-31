@@ -1,6 +1,5 @@
 package com.thenatekirby.babel.machine.entity;
 
-
 import com.thenatekirby.babel.core.NBTConstants;
 import com.thenatekirby.babel.core.progress.Progress;
 import com.thenatekirby.babel.machine.config.EnergyStats;
@@ -13,9 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -26,7 +23,7 @@ import java.util.List;
 
 // ====---------------------------------------------------------------------------====
 
-public class WorkingBlockEntity extends BabelBlockEntity {
+public class DeviceBlockEntity extends TickingBlockEntity {
     private boolean working = false;
 
     @Nonnull
@@ -50,8 +47,8 @@ public class WorkingBlockEntity extends BabelBlockEntity {
     protected WorkingArea workingArea = new WorkingArea(0, 0,0, WorkingArea.WorkingDirection.AROUND);
     private boolean showingWorkingArea = false;
 
-    public WorkingBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState blockState) {
-        super(tileEntityTypeIn, pos, blockState);
+    public DeviceBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
+        super(blockEntityType, pos, blockState);
     }
 
     // ====---------------------------------------------------------------------------====
@@ -73,17 +70,9 @@ public class WorkingBlockEntity extends BabelBlockEntity {
 
     // endregion
     // ====---------------------------------------------------------------------------====
-    // region ITickableTileEntity
+    // region Lifecycle
 
-//    @Override
-    public void tick() {
-        if (level == null || level.isClientSide) {
-            return;
-        }
-
-        workTick((ServerLevel) level);
-    }
-
+    @Override
     protected void workTick(@Nonnull ServerLevel level) {
         if (progress.canAdvance()) {
             if (progress.getProgressCurrent() == 0 && !this.onWorkStart(level)) {
@@ -122,23 +111,7 @@ public class WorkingBlockEntity extends BabelBlockEntity {
         }
     }
 
-    // endregion
-    // ====---------------------------------------------------------------------------====
-    // region Lifecycle
-
-    @Override
-    public void setLevel(@Nonnull Level level) {
-        super.setLevel(level);
-
-        if (!level.isClientSide) {
-            this.onInventoryChanged((ServerLevel) level);
-        }
-    }
-
-    @Override
     public void onInventoryChanged(@Nonnull ServerLevel level) {
-        super.onInventoryChanged(level);
-
         if (!isProcessingOutput) {
             handleInventoryChange(level);
         }
@@ -326,29 +299,29 @@ public class WorkingBlockEntity extends BabelBlockEntity {
     // ====---------------------------------------------------------------------------====
     // region NBT
 
-    @Override
-    public void load(@Nonnull CompoundTag nbt) {
-        super.load(nbt);
-        progress.deserializeNBT(nbt.getCompound("progress"));
-        redstoneMode.deserializeNBT(nbt.getCompound("redstone_mode"));
 
-        if (nbt.contains("results", NBTConstants.TAG_LIST)) {
+    @Override
+    protected void loadBlockEntity(@Nonnull CompoundTag compoundTag) {
+        super.loadBlockEntity(compoundTag);
+        progress.deserializeNBT(compoundTag.getCompound("progress"));
+        redstoneMode.deserializeNBT(compoundTag.getCompound("redstone_mode"));
+
+        if (compoundTag.contains("results", NBTConstants.TAG_LIST)) {
             results.clear();
 
-            ListTag listNBT = nbt.getList("results", NBTConstants.TAG_COMPOUND);
+            ListTag listNBT = compoundTag.getList("results", NBTConstants.TAG_COMPOUND);
             for (int idx = 0; idx < listNBT.size(); idx++) {
                 results.add(ItemStack.of(listNBT.getCompound(idx)));
             }
         }
 
-        showingWorkingArea = nbt.getBoolean("showing_working_area");
+        showingWorkingArea = compoundTag.getBoolean("showing_working_area");
         ServerUtil.ifServer(level, this::onCalculateResult);
     }
 
-    @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag compound) {
-        compound.put("progress", progress.serializeNBT());
+    protected void serializeBlockEntity(CompoundTag compoundTag) {
+        compoundTag.put("progress", progress.serializeNBT());
 
         if (!results.isEmpty()) {
             ListTag listNBT = new ListTag();
@@ -356,13 +329,13 @@ public class WorkingBlockEntity extends BabelBlockEntity {
                 listNBT.add(itemStack.serializeNBT());
             }
 
-            compound.put("results", listNBT);
+            compoundTag.put("results", listNBT);
         }
 
-        compound.put("redstone_mode", redstoneMode.serializeNBT());
-        compound.putBoolean("showing_working_area", showingWorkingArea);
+        compoundTag.put("redstone_mode", redstoneMode.serializeNBT());
+        compoundTag.putBoolean("showing_working_area", showingWorkingArea);
 
-        return super.save(compound);
+        super.serializeBlockEntity(compoundTag);
     }
 
     // endregion

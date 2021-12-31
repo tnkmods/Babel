@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 // ====---------------------------------------------------------------------------====
 
 public class RenderUtil {
-
     private static Minecraft getMinecraft() {
         return Minecraft.getInstance();
     }
@@ -27,24 +26,24 @@ public class RenderUtil {
 
     public static void renderItemIntoGuiScaled(IItemProvider itemProvider, PoseStack matrixStack, int xPos, int yPos, int scale) {
         // TODO: Render Item Into Gui Scaled
-//        ItemRenderer itemRenderer = getItemRenderer();
-//        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-//
-//        matrixStack.pushPose();
-//        RenderSystem.enableDepthTest();
+        ItemRenderer itemRenderer = getItemRenderer();
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+
+        matrixStack.pushPose();
+        RenderSystem.enableDepthTest();
 //        RenderHelper.turnBackOn();
-//        if (scale != 1) {
-//            matrixStack.scale(scale, scale, scale);
-//        }
-//
+        if (scale != 1) {
+            matrixStack.scale(scale, scale, scale);
+        }
+
 //        RenderSystem.pushMatrix();
 //        RenderSystem.multMatrix(matrixStack.last().pose());
-//        itemRenderer.renderAndDecorateItem(new ItemStack(itemProvider), xPos, yPos);
+        itemRenderer.renderAndDecorateItem(new ItemStack(itemProvider), xPos, yPos);
 //
 //        RenderSystem.popMatrix();
 //        RenderHelper.turnOff();
-//        RenderSystem.disableDepthTest();
-//        matrixStack.popPose();
+        RenderSystem.disableDepthTest();
+        matrixStack.popPose();
     }
 
     // ====---------------------------------------------------------------------------====
@@ -89,6 +88,8 @@ public class RenderUtil {
     // Textures
 
     public static void bindTexture(ResourceLocation resourceLocation) {
-        getMinecraft().getTextureManager().bindForSetup(resourceLocation);
+        RenderSystem.setShaderTexture(0, resourceLocation);
+
+//        getMinecraft().getTextureManager().bindForSetup(resourceLocation);
     }
 }

@@ -17,7 +17,7 @@ import java.util.function.Predicate;
     this slot
  */
 
-public class BabelSlotItemHandler implements IItemHandler {
+public class ValidatedSlotItemHandler implements IItemHandler {
     @Nonnull
     private ItemStack itemStack = ItemStack.EMPTY;
 
@@ -25,50 +25,28 @@ public class BabelSlotItemHandler implements IItemHandler {
 
     private boolean enabled = true;
 
-    private final int posX;
-    private final int posY;
     private int maxStackSize = 0;
 
     private IOnSlotChangedListener listener;
-    private GuiView hintView;
 
-    public BabelSlotItemHandler(int posX, int posY) {
-        this(posX, posY, ItemStackPredicates.ALL);
+    public ValidatedSlotItemHandler() {
+        this(ItemStackPredicates.ALL);
     }
 
-    public BabelSlotItemHandler(int posX, int posY, Predicate<ItemStack> validator) {
-        this.posX = posX;
-        this.posY = posY;
+    public ValidatedSlotItemHandler(Predicate<ItemStack> validator) {
         this.validator = validator;
     }
 
     // ====---------------------------------------------------------------------------====
     // region Getters & Setters
 
-    public int getPosX() {
-        return posX;
-    }
-
-    public int getPosY() {
-        return posY;
-    }
-
     public void setListener(IOnSlotChangedListener listener) {
         this.listener = listener;
     }
 
-    public BabelSlotItemHandler withMaxStackSize(int maxStackSize) {
+    public ValidatedSlotItemHandler withMaxStackSize(int maxStackSize) {
         this.maxStackSize = maxStackSize;
         return this;
-    }
-
-    public BabelSlotItemHandler withHintView(GuiView hintView) {
-        this.hintView = hintView;
-        return this;
-    }
-
-    public GuiView getHintView() {
-        return hintView;
     }
 
     // endregion
@@ -213,6 +191,6 @@ public class BabelSlotItemHandler implements IItemHandler {
     // region Listener
 
     public interface IOnSlotChangedListener {
-        void onSlotChanged(BabelSlotItemHandler slot);
+        void onSlotChanged(ValidatedSlotItemHandler slot);
     }
 }
