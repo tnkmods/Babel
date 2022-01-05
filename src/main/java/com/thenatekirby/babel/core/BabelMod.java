@@ -47,15 +47,19 @@ public class BabelMod {
 
     private void onClientSetup(FMLClientSetupEvent event) {
         lifecycleAdapter.ifPresent(adapter -> {
-            adapter.onClientSetup(event);
-            adapter.onRegisterScreens();
+            event.enqueueWork(() -> {
+                adapter.onClientSetup(event);
+                adapter.onRegisterScreens();
+            });
         });
     }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
         lifecycleAdapter.ifPresent(adapter -> {
-            adapter.onCommonSetup(event);
-            adapter.onRegisterPackets();
+            event.enqueueWork(() -> {
+                adapter.onCommonSetup(event);
+                adapter.onRegisterPackets();
+            });
         });
     }
 
