@@ -9,8 +9,9 @@ import java.util.UUID;
 
 // ====---------------------------------------------------------------------------====
 
+@SuppressWarnings({"ClassCanBeRecord", "unused"})
 public class EntityStatus {
-    private LivingEntity livingEntity;
+    private final LivingEntity livingEntity;
 
     private EntityStatus(@Nonnull LivingEntity livingEntity) {
         this.livingEntity = livingEntity;
