@@ -1,13 +1,14 @@
 package com.thenatekirby.babel.gui.bars;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.thenatekirby.babel.api.IGuiRenderer;
-import com.thenatekirby.babel.api.IProgress;
-import com.thenatekirby.babel.core.gui.GuiRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.thenatekirby.babel.core.api.IGuiRenderer;
+import com.thenatekirby.babel.core.gui.Frame;
+import com.thenatekirby.babel.core.progress.IProgress;
 import com.thenatekirby.babel.gui.GuiView;
-import com.thenatekirby.babel.gui.core.Frame;
 
 import javax.annotation.Nullable;
+
+// ====---------------------------------------------------------------------------====
 
 public class GuiVerticalBar extends GuiView {
     private final int textureX;
@@ -29,7 +30,7 @@ public class GuiVerticalBar extends GuiView {
     }
 
     @Override
-    public void drawFrame(Frame frame, MatrixStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
+    public void drawFrame(Frame frame, PoseStack matrixStack, IGuiRenderer renderer, int mouseX, int mouseY, float partialTicks) {
         IProgress progressProvider = getProgressProvider();
 
         if (progressProvider != null) {
@@ -40,6 +41,8 @@ public class GuiVerticalBar extends GuiView {
             drawTexturedRect(matrixStack, frame.x, frame.y + offset, textureXFilled, textureYFilled + (frame.height - progressHeight), frame.width, progressHeight);
         }
     }
+
+    // ====---------------------------------------------------------------------------====
 
     public interface IVerticalBarType {
         int getTextureX(boolean filled);

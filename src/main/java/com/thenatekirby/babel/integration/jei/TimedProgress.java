@@ -1,10 +1,11 @@
 package com.thenatekirby.babel.integration.jei;
 
-import com.thenatekirby.babel.Babel;
-import com.thenatekirby.babel.api.IProgress;
+import com.thenatekirby.babel.core.progress.IProgress;
 import mezz.jei.api.gui.ITickTimer;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class TimedProgress implements IProgress {
     private final ITickTimer tickTimer;

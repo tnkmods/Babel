@@ -2,13 +2,13 @@ package com.thenatekirby.babel.util;
 
 import com.thenatekirby.babel.core.MutableResourceLocation;
 import net.minecraftforge.fml.ModList;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
-@SuppressWarnings("WeakerAccess")
+// ====---------------------------------------------------------------------------====
+
 public class ModUtil {
     public static boolean isModLoaded(@Nonnull String modId) {
         return ModList.get().isLoaded(modId);

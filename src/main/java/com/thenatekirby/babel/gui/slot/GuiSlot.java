@@ -1,36 +1,24 @@
 package com.thenatekirby.babel.gui.slot;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.thenatekirby.babel.api.IGuiRenderer;
-import com.thenatekirby.babel.core.gui.GuiRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.thenatekirby.babel.babelmod.BabelTextureLocations;
+import com.thenatekirby.babel.core.gui.Frame;
 import com.thenatekirby.babel.gui.GuiView;
-import com.thenatekirby.babel.gui.core.Frame;
-import com.thenatekirby.babel.mod.BabelTextureLocations;
 import com.thenatekirby.babel.util.RenderUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.recipebook.RecipeBookGui;
-import net.minecraft.client.gui.screen.inventory.CraftingScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class GuiSlot extends GuiView {
     public enum SlotType {
         DEFAULT(18, 18, 0, 0);
 
-        public int width;
-        public int height;
-        public int textureX;
-        public int textureY;
+        public final int width;
+        public final int height;
+        public final int textureX;
+        public final int textureY;
 
         SlotType(int width, int height, int textureX, int textureY) {
             this.width = width;
@@ -48,12 +36,8 @@ public class GuiSlot extends GuiView {
         }
     }
 
-    public GuiSlot(int x, int y) {
-        this(x, y, SlotType.DEFAULT, null);
-    }
-
-    private SlotType slotType;
-    private GuiView hintView;
+    private final SlotType slotType;
+    private final GuiView hintView;
 
     public GuiSlot(int x, int y, SlotType slotType, GuiView hintView) {
         super(x, y, slotType.width, slotType.height);
@@ -62,40 +46,32 @@ public class GuiSlot extends GuiView {
         this.hintView = hintView;
     }
 
+    // ====---------------------------------------------------------------------------====
+    // region Rendering
+
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(@Nonnull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(poseStack, mouseX, mouseY, partialTicks);
         RenderUtil.bindTexture(BabelTextureLocations.GUI.COMPONENTS);
         Frame frame = getFrame().offsetBy(-1, -1);
-        drawTexturedRect(matrixStack, frame, slotType.textureX, slotType.textureY);
+        drawTexturedRect(poseStack, frame, slotType.textureX, slotType.textureY);
 
         if (hintView instanceof GuiSlotHintView) {
-            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            itemRenderer.blitOffset = 100.0f;
-
             RenderSystem.enableDepthTest();
-            RenderHelper.turnBackOn();
+            ((GuiSlotHintView) hintView).renderHintInto(getFrame(), poseStack, getRenderer(), mouseX, mouseY, partialTicks);
 
-            ((GuiSlotHintView) hintView).renderHintInto(getFrame(), matrixStack, getRenderer(), mouseX, mouseY, partialTicks);
-
-            RenderSystem.disableDepthTest();
-
-            // Render an overlay to gray out the hint item
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
-            RenderSystem.disableLighting();
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.5f);
 
+            RenderUtil.color4f(1.0f, 1.0f, 1.0f, 0.5f);
             RenderUtil.bindTexture(BabelTextureLocations.GUI.COMPONENTS);
-            drawTexturedRect(matrixStack, frame, slotType.textureX, slotType.textureY);
+            drawTexturedRect(poseStack, frame, slotType.textureX, slotType.textureY);
+            RenderUtil.resetColor();
 
             RenderSystem.disableBlend();
             RenderSystem.enableDepthTest();
         }
     }
 
-    @Override
-    public void renderButton(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
-    }
+    // endregion
 }

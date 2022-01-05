@@ -1,27 +1,29 @@
 package com.thenatekirby.babel.util;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
+// ====---------------------------------------------------------------------------====
+
 public class ServerUtil {
-    public static boolean isClientWorld(@Nonnull World world) {
+    public static boolean isClientLevel(@Nonnull Level world) {
         return world.isClientSide;
     }
 
-    public static void ifServer(@Nullable World world, Consumer<ServerWorld> consumer) {
+    public static void ifServer(@Nullable Level world, @Nonnull Consumer<ServerLevel> consumer) {
         if (world == null || world.isClientSide) {
             return;
         }
 
-        consumer.accept((ServerWorld) world);
+        consumer.accept((ServerLevel) world);
     }
 
-    public static void ifServer(@Nullable TileEntity tileEntity, Consumer<ServerWorld> consumer) {
+    public static void ifServer(@Nullable BlockEntity tileEntity, @Nonnull Consumer<ServerLevel> consumer) {
         if (tileEntity == null) {
             return;
         }

@@ -1,0 +1,18 @@
+{
+  "minVersion": "0.8",
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.babel.refmap.json",
+  "package": "com.thenatekirby.babel.mixin",
+  "mixins": [
+    "ConstantValueMixin",
+    "EnchantRandomlyFunctionMixin",
+    "LootItemMixin",
+    "LootPoolMixin",
+    "LootPoolSingletonContainerMixin",
+    "LootTableMixin",
+    "SetItemCountFunctionMixin",
+    "SetNbtFunctionMixin",
+    "UniformGeneratorMixin"
+  ]
+}

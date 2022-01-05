@@ -1,11 +1,13 @@
 package com.thenatekirby.babel.network.sync;
 
-import com.thenatekirby.babel.api.IProgress;
-import com.thenatekirby.babel.api.ISyncable;
-import com.thenatekirby.babel.core.capability.ExperienceStorage;
-import net.minecraft.network.PacketBuffer;
+import com.thenatekirby.babel.capability.experience.ExperienceStorage;
+import com.thenatekirby.babel.core.api.ISyncable;
+import com.thenatekirby.babel.core.progress.IProgress;
+import net.minecraft.network.FriendlyByteBuf;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class SyncableExperience implements ISyncable {
     private ExperienceStorage experienceStorage;
@@ -19,12 +21,12 @@ public class SyncableExperience implements ISyncable {
     }
 
     @Override
-    public void write(@Nonnull PacketBuffer packetBuffer) {
+    public void write(@Nonnull FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(experienceStorage.getExperienceTotal());
     }
 
     @Override
-    public void read(@Nonnull PacketBuffer packetBuffer) {
+    public void read(@Nonnull FriendlyByteBuf packetBuffer) {
         experienceStorage.setExperienceTotal(packetBuffer.readInt());
     }
 

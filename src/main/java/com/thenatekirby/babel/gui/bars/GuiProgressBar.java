@@ -1,10 +1,10 @@
 package com.thenatekirby.babel.gui.bars;
 
-import com.thenatekirby.babel.api.IProgress;
+import com.thenatekirby.babel.core.progress.IProgress;
 
 import javax.annotation.Nullable;
 
-import com.thenatekirby.babel.gui.bars.GuiHorizontalBar.IHorizontalBarType;
+// ====---------------------------------------------------------------------------====
 
 public class GuiProgressBar extends GuiHorizontalBar {
     private static final IHorizontalBarType BAR_TYPE = new IHorizontalBarType() {

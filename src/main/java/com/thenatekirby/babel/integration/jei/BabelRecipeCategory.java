@@ -3,10 +3,9 @@ package com.thenatekirby.babel.integration.jei;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.thenatekirby.babel.api.IGuiRenderer;
-import com.thenatekirby.babel.api.IProgress;
-import com.thenatekirby.babel.core.gui.GuiRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.thenatekirby.babel.core.api.IGuiRenderer;
+import com.thenatekirby.babel.core.progress.IProgress;
 import com.thenatekirby.babel.gui.GuiView;
 import com.thenatekirby.babel.recipe.BabelRecipe;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,8 +14,10 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+// ====---------------------------------------------------------------------------====
 
 public class BabelRecipeCategory<T extends BabelRecipe, U extends BabelRecipeData> implements IRecipeCategory<T> {
     private IGuiHelper guiHelper;
@@ -55,7 +58,7 @@ public class BabelRecipeCategory<T extends BabelRecipe, U extends BabelRecipeDat
 
     protected BabelRecipeCategory(IGuiHelper guiHelper, int width, int height, CacheLoader<T, U> cacheLoader) {
         this.guiHelper = guiHelper;
-        this.background = new EmptyBackground(width, height);
+        this.background = new EmptyJEIBackground(width, height);
         this.icon = makeIcon(guiHelper);
         this.renderer = new JeiGuiRenderer();
 
@@ -125,8 +128,8 @@ public class BabelRecipeCategory<T extends BabelRecipe, U extends BabelRecipeDat
 
     @Nonnull
     @Override
-    public String getTitle() {
-        return "";
+    public Component getTitle() {
+        return new TextComponent("");
     }
 
     @Override
@@ -150,7 +153,7 @@ public class BabelRecipeCategory<T extends BabelRecipe, U extends BabelRecipeDat
     }
 
     @Override
-    public void draw(T recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+    public void draw(@Nonnull T recipe, @Nonnull PoseStack matrixStack, double mouseX, double mouseY) {
         for (GuiView view : subviews) {
             view.render(matrixStack, (int)mouseX, (int)mouseY, 0);
         }

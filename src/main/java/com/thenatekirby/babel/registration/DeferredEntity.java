@@ -1,9 +1,9 @@
 package com.thenatekirby.babel.registration;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 // ====---------------------------------------------------------------------------====
 
@@ -19,8 +19,11 @@ public class DeferredEntity<T extends Entity> {
     }
 
     // ====---------------------------------------------------------------------------====
+    // region Getters
 
     public EntityType<T> getAsEntityType() {
         return entityType.get();
     }
+
+    // endregion
 }

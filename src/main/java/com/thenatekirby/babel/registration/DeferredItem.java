@@ -1,9 +1,9 @@
 package com.thenatekirby.babel.registration;
 
-import net.minecraft.item.Item;
-import net.minecraft.util.IItemProvider;
-import net.minecraftforge.fml.RegistryObject;
+import com.thenatekirby.babel.core.api.IItemProvider;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -22,7 +22,7 @@ public class DeferredItem<T extends Item> implements IItemProvider {
     }
 
     // ====---------------------------------------------------------------------------====
-    // Getters
+    // region Getters
 
     @Nonnull
     @Override
@@ -33,4 +33,6 @@ public class DeferredItem<T extends Item> implements IItemProvider {
     public T toItem() {
         return asItem();
     }
+
+    // endregion
 }

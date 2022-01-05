@@ -1,12 +1,14 @@
 package com.thenatekirby.babel.integration.jei;
 
-import com.thenatekirby.babel.api.IGuiRenderer;
+import com.thenatekirby.babel.core.api.IGuiRenderer;
 import com.thenatekirby.babel.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
+
+// ====---------------------------------------------------------------------------====
 
 public class JeiGuiRenderer implements IGuiRenderer {
     @Override
@@ -36,7 +38,7 @@ public class JeiGuiRenderer implements IGuiRenderer {
 
     @Nonnull
     @Override
-    public FontRenderer getFontRenderer() {
+    public Font getFont() {
         return Minecraft.getInstance().font;
     }
 }
