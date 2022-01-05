@@ -3,6 +3,7 @@ package com.thenatekirby.babel.gui.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.thenatekirby.babel.core.api.IGuiRenderer;
 import com.thenatekirby.babel.machine.gui.DeviceScreen;
+import com.thenatekirby.babel.util.GuiUtil;
 import com.thenatekirby.babel.util.RenderUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.TextComponent;
@@ -52,11 +53,11 @@ public class GuiRenderer implements IGuiRenderer {
         return screen.getFont();
     }
 
-    public void renderTooltip(@Nonnull PoseStack matrixStack, @Nonnull TextComponent textComponent, int mouseX, int mouseY) {
-        this.renderTooltips(matrixStack, Collections.singletonList(textComponent), mouseX, mouseY);
+    public void renderTooltip(@Nonnull PoseStack poseStack, @Nonnull TextComponent textComponent, int mouseX, int mouseY) {
+        this.renderTooltips(poseStack, Collections.singletonList(textComponent), mouseX, mouseY);
     }
 
-    public void renderTooltips(@Nonnull PoseStack matrixStack, @Nonnull List<TextComponent> toolTips, int mouseX, int mouseY) {
-//        GuiUtils.drawHoveringText(matrixStack, toolTips, mouseX, mouseY, getGuiWidth(), getGuiHeight(), -1, getFontRenderer());
+    public void renderTooltips(@Nonnull PoseStack poseStack, @Nonnull List<TextComponent> toolTips, int mouseX, int mouseY) {
+        GuiUtil.drawHoveringText(poseStack, toolTips, mouseX, mouseY, -1, getFont());
     }
 }

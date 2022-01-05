@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
         classpath 'org.parchmentmc:librarian:1.+'
     }
 }
@@ -38,7 +38,6 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            arg "-mixin.config=babel.mixins.json"
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -50,7 +49,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            arg "-mixin.config=babel.mixins.json"
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -62,7 +60,6 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            arg "-mixin.config=babel.mixins.json"
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -79,11 +76,13 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 mixin {
-    add sourceSets.main, 'babel.refmap.json'
+    add sourceSets.main, 'mixins.babel.refmap.json'
+    config 'mixins.babel.json'
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     if (project.hasProperty('jei_version')) {
         compileOnly fg.deobf("mezz.jei:jei-${project.jei_version}:api")
@@ -95,7 +94,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "MixinConfigs": "babel.mixins.json",
+                "MixinConfigs": "mixins.babel.json",
                 "Specification-Title": "${mod_name}",
                 "Specification-Vendor": "thenatekirby",
                 "Specification-Version": "${mc_version}",

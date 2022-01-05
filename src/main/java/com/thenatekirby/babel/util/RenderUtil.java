@@ -13,39 +13,37 @@ import net.minecraft.world.item.ItemStack;
 // ====---------------------------------------------------------------------------====
 
 public class RenderUtil {
-    private static Minecraft getMinecraft() {
-        return Minecraft.getInstance();
-    }
-
-    public static ItemRenderer getItemRenderer() {
-        return Minecraft.getInstance().getItemRenderer();
-    }
-
-    public static void renderItemIntoGui(IItemProvider itemProvider, PoseStack matrixStack, int xPos, int yPos) {
-        renderItemIntoGuiScaled(itemProvider, matrixStack, xPos, yPos, 1);
-    }
-
-    public static void renderItemIntoGuiScaled(IItemProvider itemProvider, PoseStack matrixStack, int xPos, int yPos, int scale) {
-        // TODO: Render Item Into Gui Scaled
-        ItemRenderer itemRenderer = getItemRenderer();
-        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-
-        matrixStack.pushPose();
-        RenderSystem.enableDepthTest();
-//        RenderHelper.turnBackOn();
-        if (scale != 1) {
-            matrixStack.scale(scale, scale, scale);
-        }
-
-//        RenderSystem.pushMatrix();
-//        RenderSystem.multMatrix(matrixStack.last().pose());
-        itemRenderer.renderAndDecorateItem(new ItemStack(itemProvider), xPos, yPos);
+//    private static Minecraft getMinecraft() {
+//        return Minecraft.getInstance();
+//    }
 //
-//        RenderSystem.popMatrix();
-//        RenderHelper.turnOff();
-        RenderSystem.disableDepthTest();
-        matrixStack.popPose();
-    }
+//    public static ItemRenderer getItemRenderer() {
+//        return Minecraft.getInstance().getItemRenderer();
+//    }
+//    public static void renderItemIntoGui(IItemProvider itemProvider, PoseStack matrixStack, int xPos, int yPos) {
+//        renderItemIntoGuiScaled(itemProvider, matrixStack, xPos, yPos, 1);
+//    }
+//
+//    public static void renderItemIntoGuiScaled(IItemProvider itemProvider, PoseStack matrixStack, int xPos, int yPos, int scale) {
+//        ItemRenderer itemRenderer = getItemRenderer();
+//        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+//
+//        matrixStack.pushPose();
+//        RenderSystem.enableDepthTest();
+////        RenderHelper.turnBackOn();
+//        if (scale != 1) {
+//            matrixStack.scale(scale, scale, scale);
+//        }
+//
+////        RenderSystem.pushMatrix();
+////        RenderSystem.multMatrix(matrixStack.last().pose());
+//        itemRenderer.renderAndDecorateItem(new ItemStack(itemProvider), xPos, yPos);
+////
+////        RenderSystem.popMatrix();
+////        RenderHelper.turnOff();
+//        RenderSystem.disableDepthTest();
+//        matrixStack.popPose();
+//    }
 
     // ====---------------------------------------------------------------------------====
     // Colors

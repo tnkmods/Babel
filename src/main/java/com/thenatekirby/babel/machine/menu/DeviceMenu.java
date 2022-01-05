@@ -1,7 +1,6 @@
 package com.thenatekirby.babel.machine.menu;
 
 import com.thenatekirby.babel.Babel;
-import com.thenatekirby.babel.capability.item.ValidatedSlotItemHandler;
 import com.thenatekirby.babel.core.api.IBooleanProvider;
 import com.thenatekirby.babel.core.api.ISyncable;
 import com.thenatekirby.babel.gui.buttons.GuiButton;
@@ -14,7 +13,7 @@ import com.thenatekirby.babel.network.packet.ToggleRedstoneModePacket;
 import com.thenatekirby.babel.network.sync.SyncableEnergyStats;
 import com.thenatekirby.babel.network.sync.SyncableProgress;
 import com.thenatekirby.babel.network.sync.SyncableRedstoneMode;
-import com.thenatekirby.babel.util.BabelConstants;
+import com.thenatekirby.babel.util.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -161,7 +160,7 @@ public class DeviceMenu<T extends DeviceBlockEntity> extends BabelMenu {
             outputItemStack = inputItemStack.copy();
 
             int machineSlotCount = machineInventory.getSlotCount();
-            int inventorySlotEnd = machineSlotCount + BabelConstants.PLAYER_INV_SLOT_COUNT;
+            int inventorySlotEnd = machineSlotCount + Constants.PLAYER_INV_SLOT_COUNT;
 
             if (index < machineSlotCount) {
                 if (!this.moveItemStackTo(inputItemStack, machineSlotCount, inventorySlotEnd, true)) {
