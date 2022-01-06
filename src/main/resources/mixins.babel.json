@@ -13,6 +13,7 @@
     "LootTableMixin",
     "SetItemCountFunctionMixin",
     "SetNbtFunctionMixin",
+    "SetPotionFunctionMixin",
     "UniformGeneratorMixin"
   ]
 }
