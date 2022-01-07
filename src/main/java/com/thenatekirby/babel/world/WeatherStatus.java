@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 
 // ====---------------------------------------------------------------------------====
 
+@SuppressWarnings("ClassCanBeRecord")
 public class WeatherStatus {
     private final Level level;
 
@@ -33,20 +34,6 @@ public class WeatherStatus {
 
     public boolean isClear() {
         return !isRaining() && !isStorming();
-    }
-
-    public WeatherType getWeatherType() {
-        if (isRaining()) {
-            return WeatherType.RAINING;
-        } else if (isStorming()) {
-            return WeatherType.STORMING;
-        } else {
-            return WeatherType.CLEAR;
-        }
-    }
-
-    public boolean isWeatherType(@Nonnull WeatherType weatherType) {
-        return getWeatherType() == weatherType;
     }
 
     // endregion

@@ -32,7 +32,6 @@ public class RegistrationUtil {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
     public static <B extends Block & IBlockReplacement> void overrideBlockstates(@Nonnull Block oldBlock, @Nonnull B newBlock) {
         newBlock.overrideStateContainer(oldBlock.getStateDefinition());
         newBlock.overrideDefaultState(oldBlock.defaultBlockState());

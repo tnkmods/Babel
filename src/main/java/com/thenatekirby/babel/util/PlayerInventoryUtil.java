@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 // ====---------------------------------------------------------------------------====
 
+@SuppressWarnings("unused")
 public class PlayerInventoryUtil {
 
     // region Held Items

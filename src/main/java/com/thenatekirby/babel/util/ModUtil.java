@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 // ====---------------------------------------------------------------------------====
 
+@SuppressWarnings("unused")
 public class ModUtil {
     public static boolean isModLoaded(@Nonnull String modId) {
         return ModList.get().isLoaded(modId);

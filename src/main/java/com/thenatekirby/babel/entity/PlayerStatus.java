@@ -5,6 +5,9 @@ import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
 
+// ====---------------------------------------------------------------------------====
+
+@SuppressWarnings({"unused", "ClassCanBeRecord"})
 public class PlayerStatus {
     private final Player player;
 

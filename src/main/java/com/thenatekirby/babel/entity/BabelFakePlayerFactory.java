@@ -18,11 +18,6 @@ public class BabelFakePlayerFactory {
     private final UUID playerUUID;
     private final String playerName;
 
-    public BabelFakePlayerFactory(@Nonnull UUID playerUUID, @Nonnull String playerName) {
-        this.playerUUID = playerUUID;
-        this.playerName = playerName;
-    }
-
     public BabelFakePlayerFactory(@Nonnull String playerUUID, @Nonnull String playerName) {
         this.playerUUID = UUID.fromString(playerUUID);
         this.playerName = playerName;
